@@ -2,13 +2,16 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useMotionTracking } from "../hooks/useMotionTracking";
 
 const Navbar = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useMotionTracking(buttonRef);
   useMotionTracking(containerRef);
@@ -30,14 +33,40 @@ const Navbar = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            <Image
-              src="/assets/logos/fraction.svg"
-              alt="Fraction Logo"
-              width={120}
-              height={40}
-              className="h-8 w-auto"
-            />
+            <Link href="/">
+              <Image
+                src="/assets/logos/fraction.svg"
+                alt="Fraction Logo"
+                width={120}
+                height={40}
+                className="h-8 w-auto"
+              />
+            </Link>
           </motion.div>
+
+          {/* Navigation Links */}
+          <div className="hidden md:flex items-center gap-6">
+            <Link
+              href="/create"
+              className={`text-sm font-polysans font-medium transition-colors duration-200 ${
+                pathname === '/create' 
+                  ? 'text-[#4E88F0]' 
+                  : 'text-white/80 hover:text-white'
+              }`}
+            >
+              Create Fractions
+            </Link>
+            <Link
+              href="/list"
+              className={`text-sm font-polysans font-medium transition-colors duration-200 ${
+                pathname === '/list' 
+                  ? 'text-[#4E88F0]' 
+                  : 'text-white/80 hover:text-white'
+              }`}
+            >
+              Existing Fractions
+            </Link>
+          </div>
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center gap-3">
@@ -124,6 +153,32 @@ const Navbar = () => {
               transition={{ duration: 0.2 }}
             >
               <div className="glass rounded-xl p-2 flex flex-col gap-2">
+                <Link
+                  href="/create"
+                  className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
+                    pathname === '/create' ? 'bg-[#4E88F0]/20' : ''
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span className={`font-medium text-sm ${
+                    pathname === '/create' ? 'text-[#4E88F0]' : 'text-white'
+                  }`}>
+                    Create Fractions
+                  </span>
+                </Link>
+                <Link
+                  href="/list"
+                  className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
+                    pathname === '/list' ? 'bg-[#4E88F0]/20' : ''
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span className={`font-medium text-sm ${
+                    pathname === '/list' ? 'text-[#4E88F0]' : 'text-white'
+                  }`}>
+                    Existing Fractions
+                  </span>
+                </Link>
                 <a
                   href="https://t.me/+3ZWU3oQp1XBkNTQ1"
                   target="_blank"

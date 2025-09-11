@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Lottie from "lottie-react";
-import heroAnimation from "../../public/animations/hero.json";
+import heroAnimation from "../../public/animations/hero2.json";
 
 const Hero = () => {
   return (
