@@ -4,24 +4,31 @@ import { STROKE_GRAY_1, STROKE_GRAY_2 } from "@/app/lib/constants";
 const Bento = () => {
   return (
     <section className="py-20 px-6 max-w-7xl mx-auto">
-      <div className="border" style={{ borderColor: STROKE_GRAY_1 }}>
+      <div className="border" style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.2px" }}>
         {/* Row 1: Image Left, Text Right */}
         <div className="flex flex-col lg:flex-row">
           <div
-            className="flex justify-center items-center border p-6 min-h-[300px] flex-1 lg:flex-[0.4]"
-            style={{ borderColor: STROKE_GRAY_2 }}
+            className="flex justify-center items-center border-[0.2px] p-6 min-h-[300px] flex-1 lg:flex-[0.4] relative"
+            style={{ 
+              borderColor: STROKE_GRAY_2,
+              borderWidth: "0.2px",
+              backgroundImage: "url('/assets/bgs/cardbgpattern.svg')",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              backgroundSize: "cover"
+            }}
           >
             <Image
               src="/assets/bento/illust1.svg"
               alt="Deposit and split illustration"
               width={400}
               height={300}
-              className="w-full max-w-md h-auto max-h-80"
+              className="w-full max-w-md h-auto max-h-80 relative z-10"
             />
           </div>
           <div
-            className="flex flex-col justify-center space-y-4 border p-6 min-h-[300px] flex-1 lg:flex-[0.6]"
-            style={{ borderColor: STROKE_GRAY_2 }}
+            className="flex flex-col justify-center space-y-4 border-[0.2px] p-6 min-h-[300px] flex-1 lg:flex-[0.6]"
+            style={{ borderColor: STROKE_GRAY_2, borderWidth: "0.2px" }}
           >
             <h3 className="text-2xl lg:text-3xl font-bold text-white">
               Deposit and split transactions
@@ -37,8 +44,8 @@ const Bento = () => {
         {/* Row 2: Text Left, Image Right */}
         <div className="flex flex-col lg:flex-row">
           <div
-            className="flex flex-col justify-center space-y-4 border p-6 min-h-[300px] flex-1 lg:flex-[0.6] order-2 lg:order-1"
-            style={{ borderColor: STROKE_GRAY_2 }}
+            className="flex flex-col justify-center space-y-4 border-[0.2px] p-6 min-h-[300px] flex-1 lg:flex-[0.6] order-2 lg:order-1"
+            style={{ borderColor: STROKE_GRAY_2, borderWidth: "0.2px"  }}
           >
             <h3 className="text-2xl lg:text-3xl font-bold text-white">
               Integrate in &lt;10 mins
@@ -50,15 +57,22 @@ const Bento = () => {
             </p>
           </div>
           <div
-            className="flex justify-center items-center border p-6 min-h-[300px] flex-1 lg:flex-[0.4] order-1 lg:order-2"
-            style={{ borderColor: STROKE_GRAY_2 }}
+            className="flex justify-center items-center border-[0.2px] p-6 min-h-[300px] flex-1 lg:flex-[0.4] order-1 lg:order-2 relative"
+            style={{ 
+              borderColor: STROKE_GRAY_2,
+              borderWidth: "0.2px",
+              backgroundImage: "url('/assets/bgs/cardbgpattern.svg')",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              backgroundSize: "cover"
+            }}
           >
             <Image
               src="/assets/bento/illust2.svg"
               alt="Integration illustration"
               width={400}
               height={300}
-              className="w-full max-w-md h-auto max-h-80"
+              className="w-full max-w-md h-auto max-h-80 relative z-10"
             />
           </div>
         </div>
@@ -66,20 +80,26 @@ const Bento = () => {
         {/* Row 3: Image Left, Text Right */}
         <div className="flex flex-col lg:flex-row">
           <div
-            className="flex justify-center items-center border p-6 min-h-[300px] flex-1 lg:flex-[0.4]"
-            style={{ borderColor: STROKE_GRAY_2 }}
+            className="flex justify-center items-center border-[0.2px] p-6 min-h-[300px] flex-1 lg:flex-[0.4] relative"
+            style={{ 
+              borderColor: STROKE_GRAY_2,
+              backgroundImage: "url('/assets/bgs/cardbgpattern.svg')",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+              backgroundSize: "cover"
+            }}
           >
             <Image
               src="/assets/bento/illust3.svg"
               alt="Trusted and audited illustration"
               width={400}
               height={300}
-              className="w-full max-w-md h-auto max-h-80"
+              className="w-full max-w-md h-auto max-h-80 relative z-10"
             />
           </div>
           <div
-            className="flex flex-col justify-center space-y-4 border p-6 min-h-[300px] flex-1 lg:flex-[0.6]"
-            style={{ borderColor: STROKE_GRAY_2 }}
+            className="flex flex-col justify-center space-y-4 border-[0.2px] p-6 min-h-[300px] flex-1 lg:flex-[0.6]"
+            style={{ borderColor: STROKE_GRAY_2, borderWidth: "0.2px" }}
           >
             <h3 className="text-2xl lg:text-3xl font-bold text-white">
               Trusted, Audited & open-source

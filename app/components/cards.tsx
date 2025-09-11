@@ -1,4 +1,5 @@
 import Image from "next/image";
+import SectionHeader from "./common/SectionHeader";
 
 const Cards = () => {
   const cards = [
@@ -31,15 +32,10 @@ const Cards = () => {
   return (
     <>
       <div className="flex flex-col gap-16 items-center justify-center max-w-7xl mx-auto">
-        <div className="flex flex-col gap-4 items-center justify-center">
-          <h2 className="text-white text-xs font-polysans">Purpose</h2>
-          <p className="text-white text-4xl max-w-2xl font-polysans text-center">
-            Built for agentic workflows and consumer apps
-          </p>
-          <p className="text-white text-md font-polysans">
-            Real-world workflows developers can launch in minutes.
-          </p>
-        </div>
+        <SectionHeader
+          title="Built for agentic workflows and consumer apps"
+          subtitle="Real-world workflows developers can launch in minutes."
+        />
 
         <div className="flex flex-col gap-8 m-2 md:flex-row">
           {cards.map((card, index) => (
