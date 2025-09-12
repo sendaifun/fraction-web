@@ -183,7 +183,7 @@ const Navbar = () => {
                       </span>
                     </a> */}
 
-                <UnifiedWalletButton />
+                <UnifiedWalletButton  buttonClassName="!glass-button !flex !items-center !justify-center !gap-2 !px-4 !py-2 !rounded-full" />
               </div>
             </motion.div>
           )}
