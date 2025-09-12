@@ -51,7 +51,7 @@ const Navbar = () => {
               href="/create"
               className={`text-sm font-polysans font-medium transition-colors duration-200 ${
                 pathname === "/create"
-                  ? "text-[#4E88F0]"
+                  ? "text-[#0B78FD]"
                   : "text-white/80 hover:text-white"
               }`}
             >
@@ -61,7 +61,7 @@ const Navbar = () => {
               href="/list"
               className={`text-sm font-polysans font-medium transition-colors duration-200 ${
                 pathname === "/list"
-                  ? "text-[#4E88F0]"
+                  ? "text-[#0B78FD]"
                   : "text-white/80 hover:text-white"
               }`}
             >

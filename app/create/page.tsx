@@ -7,8 +7,17 @@ export default function AppPage() {
     <>
       <div className="w-full h-full flex flex-col mx-auto px-2 sm:px-6">
         <Navbar />
-        <div className="mt-32">
+        <div className="mt-32 relative">
           <Split />
+
+          {/* Halo gradient overlay */}
+          <div className="absolute inset-0 -left-120 overflow-hidden pointer-events-none z-10 flex items-center justify-center">
+            <img
+              src="/assets/bgs/halograd.svg"
+              alt=""
+              className="w-full h-auto opacity-60"
+            />
+          </div>
 
           <Footer />
         </div>

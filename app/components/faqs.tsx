@@ -60,7 +60,7 @@ const AccordionItem = ({
       }}
       viewport={{ once: true, margin: "-20px" }}
       whileHover={{
-        scale: 1.02,
+        // scale: 1.02,
         transition: { duration: 0.2 },
       }}
     >

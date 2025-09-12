@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { Providers } from "./providers/walletproviders";
-import AnimatedBackground from "./components/common/AnimatedBackground";
+import TopBackground from "./components/common/TopBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,8 +37,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${polySans.variable} antialiased bg-black relative`}
       >
-        {/* Animated Background - Global for all routes */}
-        <AnimatedBackground />
+        {/* Conditional Animated Background - Hidden on /create and /list routes */}
+        <TopBackground />
 
         {/* Content Wrapper */}
         <div className="relative z-10">
