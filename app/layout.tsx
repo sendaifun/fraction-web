@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
-import Image from "next/image";
 import "./globals.css";
 import { Providers } from "./providers/walletproviders";
+import AnimatedBackground from "./components/common/AnimatedBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,32 +37,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${polySans.variable} antialiased bg-black relative`}
       >
-        {/* Background Images - Global for all routes */}
-        <div className="fixed -top-72 left-0 w-full h-screen pointer-events-none z-0">
-          {/* Stars Background */}
-          <div className="absolute top-0 left-0 w-full h-full opacity-60">
-            <Image
-              src="/assets/bgs/stars.svg"
-              alt=""
-              width={1259}
-              height={812}
-              className="w-full h-full object-cover object-top"
-              priority
-            />
-          </div>
-          
-          {/* Top Glare Overlay */}
-          <div className="absolute top-0 left-0 w-full h-full opacity-80">
-            <Image
-              src="/assets/bgs/topglare.svg"
-              alt=""
-              width={2034}
-              height={1341}
-              className="w-full h-full object-cover object-top"
-              priority
-            />
-          </div>
-        </div>
+        {/* Animated Background - Global for all routes */}
+        <AnimatedBackground />
 
         {/* Content Wrapper */}
         <div className="relative z-10">

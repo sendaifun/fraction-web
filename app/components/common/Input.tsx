@@ -60,7 +60,7 @@ const Input = ({
             type="button"
           >
             <Image
-              className="w-5 h-5 cursor-pointer"
+              className="w-4 h-4 cursor-pointer"
               src="/assets/icons/clear.svg"
               alt="Clear input"
               width={21}

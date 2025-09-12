@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "motion/react";
 import SectionHeader from "./common/SectionHeader";
 
 interface FAQItem {
@@ -40,13 +41,29 @@ const AccordionItem = ({
   item,
   isOpen,
   onClick,
+  index,
 }: {
   item: FAQItem;
   isOpen: boolean;
   onClick: () => void;
+  index: number;
 }) => {
   return (
-    <div className="border border-white/10 rounded-xl p-6 backdrop-blur-sm">
+    <motion.div
+      className="border border-white/10 rounded-xl p-6 backdrop-blur-sm"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.6,
+        delay: index * 0.1,
+        ease: "easeOut",
+      }}
+      viewport={{ once: true, margin: "-20px" }}
+      whileHover={{
+        scale: 1.02,
+        transition: { duration: 0.2 },
+      }}
+    >
       <button
         className="w-full px-6 py-4 text-left flex justify-between items-center hover: transition-colors duration-200 rounded-xl focus:outline-none focus:ring-0"
         onClick={onClick}
@@ -84,7 +101,7 @@ const AccordionItem = ({
           </p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -97,11 +114,24 @@ const Faqs = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-16 items-center justify-center max-w-7xl mx-auto p-4 mt-16">
-        <SectionHeader
-          title="Frequently Asked Questions"
-          subtitle="Everything you need to know about Fractions"
-        />
+      <motion.div
+        className="flex flex-col gap-16 items-center justify-center max-w-7xl mx-auto p-4 mt-16"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true, margin: "-100px" }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-50px" }}
+        >
+          <SectionHeader
+            title="Frequently Asked Questions"
+            subtitle="Everything you need to know about Fractions"
+          />
+        </motion.div>
         <div className="w-full max-w-7xl flex flex-col gap-4">
           {faqData.map((item, index) => (
             <AccordionItem
@@ -109,10 +139,11 @@ const Faqs = () => {
               item={item}
               isOpen={openIndex === index}
               onClick={() => handleToggle(index)}
+              index={index}
             />
           ))}
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };

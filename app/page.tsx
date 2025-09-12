@@ -10,7 +10,7 @@ export default function Home() {
     <>
       <div className="w-full h-full flex flex-col mx-auto px-6 ">
         <Navbar />
-        <div className="mt-32">
+        <div className="mt-48">
           <Hero />
           <Bento />
           <Cards />
