@@ -5,7 +5,7 @@ import Split from "../components/split";
 export default function AppPage() {
   return (
     <>
-      <div className="w-full h-full flex flex-col mx-auto px-6 bg-black">
+      <div className="w-full h-full flex flex-col mx-auto px-6">
         <Navbar />
         <div className="mt-32">
           <Split />
