@@ -1,33 +1,64 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { toast } from "sonner";
-import { useWallet, UnifiedWalletButton } from "@jup-ag/wallet-adapter";
-import ReactFlow, {
-  Node,
-  Edge,
-  addEdge,
-  Connection,
-  useNodesState,
-  useEdgesState,
-  Handle,
-  Position,
-} from "reactflow";
-import "reactflow/dist/style.css";
-import SectionHeader from "./common/SectionHeader";
-import Input from "./common/Input";
+import { botWallet, connection } from "@/app/lib/constants";
+import { UnifiedWalletButton, useWallet } from "@jup-ag/wallet-adapter";
+import { Fraction } from "@sendaifun/fraction";
 import {
   PublicKey,
   SystemProgram,
   VersionedTransaction,
 } from "@solana/web3.js";
-import { Fraction, claimAndDistribute } from "@sendaifun/fraction";
-import { connection, botWallet } from "@/app/lib/constants";
+import { useCallback, useEffect, useState } from "react";
+import ReactFlow, {
+  Connection,
+  Edge,
+  Handle,
+  Node,
+  Position,
+  addEdge,
+  useEdgesState,
+  useNodesState,
+} from "reactflow";
+import "reactflow/dist/style.css";
+import { toast } from "sonner";
+import Input from "./common/Input";
+import SectionHeader from "./common/SectionHeader";
 
 // Create a new fraction instance and call createFraction method
 const fraction = new Fraction(
-  process.env.NEXT_PUBLIC_RPC_URL || "https://api.mainnet-beta.solana.com"
+  process.env.NEXT_PUBLIC_RPC_URL || ""
 );
+
+// LocalStorage keys
+const STORAGE_KEYS = {
+  RECIPIENTS: 'fraction-recipients',
+  PERCENTAGES: 'fraction-percentages',
+  FRACTION_NAME: 'fraction-name'
+};
+
+// Helper functions for localStorage
+const saveToStorage = (key: string, value: any) => {
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.warn('Failed to save to localStorage:', error);
+    }
+  }
+};
+
+const loadFromStorage = (key: string, defaultValue: any) => {
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : defaultValue;
+    } catch (error) {
+      console.warn('Failed to load from localStorage:', error);
+      return defaultValue;
+    }
+  }
+  return defaultValue;
+};
 
 
 // Custom node for the Fractions source
@@ -72,9 +103,15 @@ const nodeTypes = {
 
 const Split = () => {
   const { connected, wallet, publicKey } = useWallet();
-  const [recipients, setRecipients] = useState<string[]>(["", ""]);
-  const [percentages, setPercentages] = useState<string[]>(["", ""]);
-  const [fractionName, setFractionName] = useState<string>("");
+  const [recipients, setRecipients] = useState<string[]>(() => 
+    loadFromStorage(STORAGE_KEYS.RECIPIENTS, ["", ""])
+  );
+  const [percentages, setPercentages] = useState<string[]>(() => 
+    loadFromStorage(STORAGE_KEYS.PERCENTAGES, ["", ""])
+  );
+  const [fractionName, setFractionName] = useState<string>(() => 
+    loadFromStorage(STORAGE_KEYS.FRACTION_NAME, "")
+  );
 
   // React Flow state - only Fractions node, connections will be drawn to form inputs
   const initialNodes: Node[] = [
@@ -95,6 +132,36 @@ const Split = () => {
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
+
+  // Save to localStorage whenever state changes
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.RECIPIENTS, recipients);
+  }, [recipients]);
+
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.PERCENTAGES, percentages);
+  }, [percentages]);
+
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.FRACTION_NAME, fractionName);
+  }, [fractionName]);
+
+  // Update React Flow elements when component mounts with loaded data
+  useEffect(() => {
+    updateFlowElements(recipients, percentages);
+  }, [recipients, percentages, ]);
+
+  // Function to clear all stored data
+  const clearStoredData = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(STORAGE_KEYS.RECIPIENTS);
+      localStorage.removeItem(STORAGE_KEYS.PERCENTAGES);
+      localStorage.removeItem(STORAGE_KEYS.FRACTION_NAME);
+    }
+    setRecipients(["", ""]);
+    setPercentages(["", ""]);
+    setFractionName("");
+  };
 
   // Function to update React Flow - only keep the Fractions node
   const updateFlowElements = useCallback(
@@ -451,15 +518,33 @@ const Split = () => {
 
             <div className="flex gap-4">
               {connected ? (
-                <button
-                  onClick={handleSplit}
-                  className="px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none bg-[#4E88F0] text-white w-full hover:bg-[#4E88F0]/90"
-                >
-                  Split
-                </button>
+                <>
+                  <button
+                    onClick={handleSplit}
+                    className="px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none bg-[#4E88F0] text-white flex-1 hover:bg-[#4E88F0]/90"
+                  >
+                    Split
+                  </button>
+                  {/* <button
+                    onClick={clearStoredData}
+                    className="px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none bg-gray-600 text-white hover:bg-gray-700"
+                    title="Clear all form data"
+                  >
+                    Clear
+                  </button> */}
+                </>
               ) : (
-                <div className="w-full">
-                  <UnifiedWalletButton buttonClassName="!w-full !px-4 !py-3 !rounded-lg !font-polysans !font-medium !transition-all !duration-200 !focus:outline-none !bg-[#4E88F0] !text-white hover:!bg-[#4E88F0]/90" />
+                <div className="flex gap-4 w-full">
+                  <div className="flex-1">
+                    <UnifiedWalletButton buttonClassName="!w-full !px-4 !py-3 !rounded-lg !font-polysans !font-medium !transition-all !duration-200 !focus:outline-none !bg-[#4E88F0] !text-white hover:!bg-[#4E88F0]/90" />
+                  </div>
+                  {/* <button
+                    onClick={clearStoredData}
+                    className="px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none bg-gray-600 text-white hover:bg-gray-700"
+                    title="Clear all form data"
+                  >
+                    Clear
+                  </button> */}
                 </div>
               )}
             </div>

@@ -11,7 +11,7 @@ export const CTA_BLUE_2 = "#4E88F0";
 
 // Create Solana connection
 export const connection = new SolanaConnection(
-  process.env.NEXT_PUBLIC_RPC_URL || "https://api.mainnet-beta.solana.com"
+  process.env.NEXT_PUBLIC_RPC_URL || ""
 );
 
 // Generate a new keypair for botWallet
