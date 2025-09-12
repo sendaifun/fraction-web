@@ -10,14 +10,25 @@ import ReactFlow, {
   Connection,
   useNodesState,
   useEdgesState,
-  Controls,
-  Background,
   Handle,
   Position,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import SectionHeader from "./common/SectionHeader";
 import Input from "./common/Input";
+import {
+  PublicKey,
+  SystemProgram,
+  VersionedTransaction,
+} from "@solana/web3.js";
+import { Fraction, claimAndDistribute } from "@sendaifun/fraction";
+import { connection, botWallet } from "@/app/lib/constants";
+
+// Create a new fraction instance and call createFraction method
+const fraction = new Fraction(
+  process.env.NEXT_PUBLIC_RPC_URL || "https://api.mainnet-beta.solana.com"
+);
+
 
 // Custom node for the Fractions source
 const FractionsNode = ({ data }: { data: any }) => {
@@ -60,9 +71,10 @@ const nodeTypes = {
 };
 
 const Split = () => {
-  const { connected } = useWallet();
+  const { connected, wallet, publicKey } = useWallet();
   const [recipients, setRecipients] = useState<string[]>(["", ""]);
   const [percentages, setPercentages] = useState<string[]>(["", ""]);
+  const [fractionName, setFractionName] = useState<string>("");
 
   // React Flow state - only Fractions node, connections will be drawn to form inputs
   const initialNodes: Node[] = [
@@ -153,8 +165,19 @@ const Split = () => {
     console.log("All percentages:", updatedPercentages);
   };
 
+  const handleSplit = async () => {
+    // Check if wallet is connected
+    if (!connected || !publicKey) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
 
-  const handleSplit = () => {
+    // Check if fraction name is provided
+    if (!fractionName.trim()) {
+      toast.error("Please enter a fraction name");
+      return;
+    }
+
     // Check if all recipients have addresses
     const emptyRecipients = recipients.filter(
       (recipient, index) => !recipient.trim() && percentages[index].trim()
@@ -192,12 +215,91 @@ const Split = () => {
       return;
     }
 
-    // Success case
-    toast.success(
-      "Fraction created successfully! All percentages sum to 100%."
-    );
-    console.log("Split created with recipients:", recipients);
-    console.log("Split created with percentages:", percentages);
+    try {
+      // Convert form data to participants array
+      const participants = recipients
+        .map((recipient, index) => {
+          if (!recipient.trim() || !percentages[index].trim()) return null;
+
+          const percentage = parseFloat(percentages[index]);
+          const shareBps = Math.round(percentage * 100); // Convert percentage to basis points
+
+          return {
+            wallet: new PublicKey(recipient.trim())?.toBase58(),
+            shareBps,
+          };
+        })
+        .filter(Boolean) as Array<{ wallet: string; shareBps: number }>;
+
+      console.log("participants", participants);
+      console.log("authority", publicKey?.toBase58());
+      console.log("fractionName", fractionName);
+      console.log("botWallet", botWallet.publicKey.toBase58());
+
+      // Convert participants to have PublicKey objects and ensure exactly 5 participants
+      const participantsWithPublicKeys = participants.map((p) => ({
+        wallet: new PublicKey(p.wallet),
+        shareBps: p.shareBps,
+      }));
+
+      // Pad with SystemProgram.programId to ensure exactly 5 participants
+      while (participantsWithPublicKeys.length < 5) {
+        participantsWithPublicKeys.push({
+          wallet: SystemProgram.programId,
+          shareBps: 0,
+        });
+      }
+
+      const { tx, fractionConfigPda } = await fraction.createFraction({
+        authority: publicKey!,
+        participants: participantsWithPublicKeys,
+        botWallet: botWallet.publicKey, // no need to change to toBase58()
+      });
+
+      console.log("Transaction created:", tx);
+      console.log("Fraction Config PDA:", fractionConfigPda);
+
+      // Set up transaction properties like in the test
+      if (tx instanceof VersionedTransaction) {
+        tx.message.recentBlockhash = (
+          await connection.getLatestBlockhash()
+        ).blockhash;
+      } else {
+        tx.feePayer = publicKey!;
+        tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+      }
+
+      // Sign and send the transaction using wallet adapter
+      if (wallet?.adapter?.sendTransaction) {
+        try {
+          const signature = await wallet.adapter.sendTransaction(
+            tx,
+            connection
+          );
+
+          // Wait for confirmation
+          await connection.confirmTransaction(signature, "confirmed");
+
+          // Success case
+          toast.success(
+            "Fraction created successfully! Transaction confirmed."
+          );
+          console.log("Split created with recipients:", recipients);
+          console.log("Split created with percentages:", percentages);
+          console.log("Transaction signature:", signature);
+          console.log("Bot wallet generated:", botWallet.publicKey.toString());
+          console.log("Fraction Config PDA:", fractionConfigPda);
+        } catch (signError) {
+          console.error("Error signing or sending transaction:", signError);
+          toast.error("Failed to sign or send transaction. Please try again.");
+        }
+      } else {
+        toast.error("Wallet does not support transaction signing");
+      }
+    } catch (error) {
+      console.error("Error creating fraction:", error);
+      toast.error("Failed to create fraction. Please try again.");
+    }
   };
 
   return (
@@ -336,7 +438,9 @@ const Split = () => {
               <Input
                 className="flex-1"
                 label="Fraction Name"
-                placeholder="Enter Address.."
+                placeholder="Enter fraction name.."
+                value={fractionName}
+                onChange={(value) => setFractionName(value)}
               />
               {/* <Input
                 className="flex-1"
@@ -355,9 +459,7 @@ const Split = () => {
                 </button>
               ) : (
                 <div className="w-full">
-                  <UnifiedWalletButton 
-                    buttonClassName="!w-full !px-4 !py-3 !rounded-lg !font-polysans !font-medium !transition-all !duration-200 !focus:outline-none !bg-[#4E88F0] !text-white hover:!bg-[#4E88F0]/90"
-                  />
+                  <UnifiedWalletButton buttonClassName="!w-full !px-4 !py-3 !rounded-lg !font-polysans !font-medium !transition-all !duration-200 !focus:outline-none !bg-[#4E88F0] !text-white hover:!bg-[#4E88F0]/90" />
                 </div>
               )}
             </div>
