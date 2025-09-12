@@ -50,7 +50,7 @@ const AccordionItem = ({
 }) => {
   return (
     <motion.div
-      className="border border-white/10 rounded-xl p-6 backdrop-blur-sm"
+      className="border border-white/10 rounded-xl sm:p-6 backdrop-blur-sm"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{

@@ -8,7 +8,7 @@ import Navbar from "./components/navbar";
 export default function Home() {
   return (
     <>
-      <div className="w-full h-full flex flex-col mx-auto px-6 ">
+      <div className="w-full h-full flex flex-col mx-auto px-2 sm:px-6">
         <Navbar />
         <div className="mt-48">
           <Hero />

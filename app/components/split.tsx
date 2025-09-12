@@ -377,7 +377,7 @@ const Split = () => {
           subtitle="Fraction is a Solana program that splits all incoming SPL tokens (eg. USDC) among the recipients according to the allocated % shares."
         />
 
-        <div className="flex w-full mt-16 gap-8 relative bg-black/10 border border-white/10 rounded-lg p-8">
+        <div className="flex w-full mt-16 gap-8 relative bg-black/10 border border-white/10 rounded-lg p-4">
           {/* Left Side - React Flow Visualization - Hidden on tablet and mobile */}
           <div className="relative w-1/2 h-96 hidden lg:block">
             <ReactFlow
