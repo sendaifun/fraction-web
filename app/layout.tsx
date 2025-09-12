@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import Image from "next/image";
 import "./globals.css";
+import { Providers } from "./providers/walletproviders";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -65,7 +66,9 @@ export default function RootLayout({
 
         {/* Content Wrapper */}
         <div className="relative z-10">
-          {children}
+          <Providers>
+            {children}
+          </Providers>
         </div>
         
         <Toaster 

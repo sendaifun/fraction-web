@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useMotionTracking } from "../hooks/useMotionTracking";
+import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
 
 const Navbar = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -49,9 +50,9 @@ const Navbar = () => {
             <Link
               href="/create"
               className={`text-sm font-polysans font-medium transition-colors duration-200 ${
-                pathname === '/create' 
-                  ? 'text-[#4E88F0]' 
-                  : 'text-white/80 hover:text-white'
+                pathname === "/create"
+                  ? "text-[#4E88F0]"
+                  : "text-white/80 hover:text-white"
               }`}
             >
               Create Fractions
@@ -59,9 +60,9 @@ const Navbar = () => {
             <Link
               href="/list"
               className={`text-sm font-polysans font-medium transition-colors duration-200 ${
-                pathname === '/list' 
-                  ? 'text-[#4E88F0]' 
-                  : 'text-white/80 hover:text-white'
+                pathname === "/list"
+                  ? "text-[#4E88F0]"
+                  : "text-white/80 hover:text-white"
               }`}
             >
               Existing Fractions
@@ -70,27 +71,8 @@ const Navbar = () => {
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            {/* Telegram Link */}
-            <a
-              href="https://t.me/+3ZWU3oQp1XBkNTQ1"
-              target="_blank"
-              rel="noopener noreferrer"
-              className=" flex items-center gap-2 rounded-full"
-            >
-              <Image
-                src="/assets/icons/telegramfade.svg"
-                alt="Telegram Logo"
-                width={32}
-                height={32}
-                className="h-6 w-6"
-              />
-              {/* <span className="text-white font-medium text-sm">
-                Join Telegram
-              </span> */}
-            </a>  
-
-            {/* Install Button */}
-            <a
+            {/* Connect Button */}
+            {/* <a
               href=""
               target="_blank"
               rel="noopener noreferrer"
@@ -106,7 +88,9 @@ const Navbar = () => {
               <span className="text-white font-medium text-sm">
                 Connect Wallet
               </span>
-            </a>
+            </a> */}
+
+            <UnifiedWalletButton />
           </div>
           {/* Mobile Menu Button */}
           <div className="md:hidden">
@@ -156,61 +140,50 @@ const Navbar = () => {
                 <Link
                   href="/create"
                   className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
-                    pathname === '/create' ? 'bg-[#4E88F0]/20' : ''
+                    pathname === "/create" ? "bg-[#4E88F0]/20" : ""
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <span className={`font-medium text-sm ${
-                    pathname === '/create' ? 'text-[#4E88F0]' : 'text-white'
-                  }`}>
+                  <span
+                    className={`font-medium text-sm ${
+                      pathname === "/create" ? "text-[#4E88F0]" : "text-white"
+                    }`}
+                  >
                     Create Fractions
                   </span>
                 </Link>
                 <Link
                   href="/list"
                   className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
-                    pathname === '/list' ? 'bg-[#4E88F0]/20' : ''
+                    pathname === "/list" ? "bg-[#4E88F0]/20" : ""
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <span className={`font-medium text-sm ${
-                    pathname === '/list' ? 'text-[#4E88F0]' : 'text-white'
-                  }`}>
+                  <span
+                    className={`font-medium text-sm ${
+                      pathname === "/list" ? "text-[#4E88F0]" : "text-white"
+                    }`}
+                  >
                     Existing Fractions
                   </span>
                 </Link>
-                <a
-                  href="https://t.me/+3ZWU3oQp1XBkNTQ1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full"
-                >
-                  <Image
-                    src="/assets/icons/telegramfade.svg"
-                    alt="Telegram Logo"
-                    width={24}
-                    height={24}
-                    className="h-5 w-5"
-                  />
-                  <span className="text-white font-medium text-sm">
-                    Join Telegram
-                  </span>
-                </a>
-                <a
-                  href=""
-                  className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full"
-                >
-                  <Image
-                    src="/assets/icons/wallet.svg"
-                    alt="wallet icon"
-                    width={24}
-                    height={24}
-                    className="h-5 w-5"
-                  />
-                  <span className="text-white font-medium text-sm">
-                    Connect Wallet
-                  </span>
-                </a>
+                {/* <a
+                      href=""
+                      className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full"
+                    >
+                      <Image
+                        src="/assets/icons/wallet.svg"
+                        alt="wallet icon"
+                        width={24}
+                        height={24}
+                        className="h-5 w-5"
+                      />
+                      <span className="text-white font-medium text-sm">
+                        Connect Wallet
+                      </span>
+                    </a> */}
+
+                <UnifiedWalletButton />
               </div>
             </motion.div>
           )}
