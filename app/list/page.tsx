@@ -123,7 +123,7 @@ export default function ListPage() {
                 {filteredFractions.map((fraction) => (
                   <div
                     key={fraction.id}
-                    className="flex-shrink-0 w-full max-w-xs bg-[#0B78FD1A] border border-white/[0.04] rounded-xl p-6 hover:border-white/[0.08] hover:bg-[#0B78FD25] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10"
+                    className="flex-shrink-0 w-full max-w-xs  bg-[#0B78FD1A] border-t-[1.53px] border-l-[0.38px] border-r-[0.38px] border-b-[0.38px] border-[#0B78FD] rounded-xl p-6 hover:border-white/[0.08] hover:bg-[#0B78FD25] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10"
                   >
                     {/* Header with name and status */}
                     <div className="flex items-start justify-between mb-4">
@@ -143,7 +143,7 @@ export default function ListPage() {
                         <div className="text-gray-400 font-polysans text-sm mb-1">
                           Fraction Address
                         </div>
-                        <div className="text-white font-polysans font-mono text-sm bg-black/20 px-3 py-1 rounded border border-white/5 flex items-center gap-2 justify-between">
+                        <div className="text-white font-polysans font-mono text-sm bg-black/20 px-3 py-2 rounded border border-white/5 flex items-center gap-2 justify-between">
                           {fraction.creator}
 
                           <button

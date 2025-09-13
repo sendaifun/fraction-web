@@ -9,128 +9,163 @@ import {
   VersionedTransaction,
 } from "@solana/web3.js";
 import { useCallback, useEffect, useState } from "react";
-import ReactFlow, {
-  Connection,
-  Edge,
-  Handle,
-  Node,
-  Position,
-  addEdge,
-  useEdgesState,
-  useNodesState,
-} from "reactflow";
-import "reactflow/dist/style.css";
 import { toast } from "sonner";
 import Input from "./common/Input";
 import SectionHeader from "./common/SectionHeader";
+import Image from "next/image";
 
 // Create a new fraction instance and call createFraction method
-const fraction = new Fraction(
-  process.env.NEXT_PUBLIC_RPC_URL || ""
-);
+const fraction = new Fraction(process.env.NEXT_PUBLIC_RPC_URL || "");
 
 // LocalStorage keys
 const STORAGE_KEYS = {
-  RECIPIENTS: 'fraction-recipients',
-  PERCENTAGES: 'fraction-percentages',
-  FRACTION_NAME: 'fraction-name'
+  RECIPIENTS: "fraction-recipients",
+  PERCENTAGES: "fraction-percentages",
+  FRACTION_NAME: "fraction-name",
 };
 
 // Helper functions for localStorage
 const saveToStorage = (key: string, value: any) => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.warn('Failed to save to localStorage:', error);
+      console.warn("Failed to save to localStorage:", error);
     }
   }
 };
 
 const loadFromStorage = (key: string, defaultValue: any) => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     try {
       const stored = localStorage.getItem(key);
       return stored ? JSON.parse(stored) : defaultValue;
     } catch (error) {
-      console.warn('Failed to load from localStorage:', error);
+      console.warn("Failed to load from localStorage:", error);
       return defaultValue;
     }
   }
   return defaultValue;
 };
 
+// Dynamic Connector Component
+const DynamicConnector = ({
+  recipientCount,
+  percentages,
+}: {
+  recipientCount: number;
+  percentages: string[];
+}) => {
+  // Calculate height and positioning based on number of recipients
+  const connectorStartX = 0; // Horizontal start position for the main connector line
+  const connectorStartY = 104;
+  const startX = 110;
+  const startY = 32; // Start position to align with Fractions box (moved up)
+  const recipientSpacing = 72; // Space between each recipient input
+  const totalHeight = Math.max(
+    200,
+    startY + (recipientCount - 1) * recipientSpacing + 50
+  );
 
-// Custom node for the Fractions source
-const FractionsNode = ({ data }: { data: any }) => {
+  // Calculate the middle point for the vertical line
+  const middleY = startY + ((recipientCount - 1) * recipientSpacing) / 2;
+
   return (
-    <div
-      className="px-6 py-4 text-white rounded-lg shadow-lg border-2"
-      style={{ background: "#05162A", borderColor: "#0B78FD" }}
+    <svg
+      width="280"
+      height={totalHeight}
+      viewBox={`0 0 280 ${totalHeight}`}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-auto"
+      style={{ minHeight: "300px" }}
     >
-      <div className="font-polysans font-semibold text-lg">Fractions</div>
-      <div className="text-sm opacity-90 mt-1">Token Distribution</div>
-      <Handle
-        type="source"
-        position={Position.Right}
-        style={{ background: "#fff", border: "2px 1px 1px 1px solid #0B78FD" }}
+      {/* Main horizontal line from Fractions box to center */}
+      <path
+        d={`M${connectorStartX} ${connectorStartY}L${startX} ${middleY}`}
+        stroke="#0B78FD"
+        strokeWidth="1"
       />
-    </div>
-  );
-};
 
-// Custom node for recipients
-const RecipientNode = ({ data }: { data: any }) => {
-  return (
-    <div className="px-4 py-3 bg-white border-2 border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-      <Handle
-        type="target"
-        position={Position.Left}
-        style={{ background: "#4E88F0", border: "2px solid #4E88F0" }}
+      {/* Vertical connector line in the middle */}
+      <path
+        d={`M${startX} ${startY}V${startY + (recipientCount - 1) * recipientSpacing}`}
+        stroke="#0B78FD"
+        strokeWidth="1"
       />
-      <div className="font-polysans font-medium text-gray-800">
-        Recipient {data.index + 1}
-      </div>
-      <div className="text-sm text-gray-600 mt-1">{data.percentage}% share</div>
-    </div>
-  );
-};
 
-const nodeTypes = {
-  fractions: FractionsNode,
-  recipient: RecipientNode,
+      {/* Generate branches for each recipient */}
+      {Array.from({ length: recipientCount }).map((_, index) => {
+        const yPosition = startY + index * recipientSpacing;
+        const percentage = percentages[index] || "0";
+        return (
+          <g key={index}>
+            {/* Main horizontal branch from center */}
+            <path
+              d={`M${startX} ${yPosition}H180`}
+              stroke="#0B78FD"
+              strokeWidth="1"
+            />
+
+            {/* Percentage label with background */}
+            <rect
+              x="185"
+              y={yPosition - 8}
+              width="40"
+              height="16"
+              strokeWidth="1"
+              rx="4"
+            />
+            <text
+              x="205"
+              y={yPosition + 3}
+              fill="#0B78FD"
+              fontSize="11"
+              fontFamily="system-ui, -apple-system, sans-serif"
+              textAnchor="middle"
+              className="select-none font-medium"
+            >
+              {percentage ? `${percentage}%` : "0%"}
+            </text>
+
+            {/* Small connecting line to input box with gap */}
+            <path
+              d={`M230 ${yPosition}H280`}
+              stroke="#0B78FD"
+              strokeWidth="1"
+            />
+
+            {/* Connection dot at main path end */}
+            <circle cx="180" cy={yPosition} r="3" fill="#0B78FD" />
+
+            {/* Connection dot at connecting line start */}
+            <circle cx="230" cy={yPosition} r="2" fill="#0B78FD" />
+
+            {/* Small dot at input box connection */}
+            <circle cx="280" cy={yPosition} r="2" fill="#0B78FD" />
+          </g>
+        );
+      })}
+
+      {/* Source connection dot */}
+      <circle cx={connectorStartX} cy={connectorStartY} r="3" fill="#0B78FD" />
+
+      {/* Center junction dot */}
+      <circle cx={startX} cy={middleY} r="4" fill="#0B78FD" />
+    </svg>
+  );
 };
 
 const Split = () => {
   const { connected, wallet, publicKey } = useWallet();
-  const [recipients, setRecipients] = useState<string[]>(() => 
+  const [recipients, setRecipients] = useState<string[]>(() =>
     loadFromStorage(STORAGE_KEYS.RECIPIENTS, ["", ""])
   );
-  const [percentages, setPercentages] = useState<string[]>(() => 
+  const [percentages, setPercentages] = useState<string[]>(() =>
     loadFromStorage(STORAGE_KEYS.PERCENTAGES, ["", ""])
   );
-  const [fractionName, setFractionName] = useState<string>(() => 
+  const [fractionName, setFractionName] = useState<string>(() =>
     loadFromStorage(STORAGE_KEYS.FRACTION_NAME, "")
-  );
-
-  // React Flow state - only Fractions node, connections will be drawn to form inputs
-  const initialNodes: Node[] = [
-    {
-      id: "fractions",
-      type: "fractions",
-      position: { x: 200, y: 150 },
-      data: {},
-    },
-  ];
-
-  const initialEdges: Edge[] = [];
-
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
   );
 
   // Save to localStorage whenever state changes
@@ -146,14 +181,9 @@ const Split = () => {
     saveToStorage(STORAGE_KEYS.FRACTION_NAME, fractionName);
   }, [fractionName]);
 
-  // Update React Flow elements when component mounts with loaded data
-  useEffect(() => {
-    updateFlowElements(recipients, percentages);
-  }, [recipients, percentages, ]);
-
   // Function to clear all stored data
   const clearStoredData = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       localStorage.removeItem(STORAGE_KEYS.RECIPIENTS);
       localStorage.removeItem(STORAGE_KEYS.PERCENTAGES);
       localStorage.removeItem(STORAGE_KEYS.FRACTION_NAME);
@@ -163,34 +193,12 @@ const Split = () => {
     setFractionName("");
   };
 
-  // Function to update React Flow - only keep the Fractions node
-  const updateFlowElements = useCallback(
-    (newRecipients: string[], newPercentages: string[]) => {
-      const newNodes: Node[] = [
-        {
-          id: "fractions",
-          type: "fractions",
-          position: { x: 200, y: 150 },
-          data: {},
-        },
-      ];
-
-      // No edges needed since we're connecting to actual form inputs
-      const newEdges: Edge[] = [];
-
-      setNodes(newNodes);
-      setEdges(newEdges);
-    },
-    [setNodes, setEdges]
-  );
-
   const addRecipient = () => {
     if (recipients.length < 5) {
       const newRecipients = [...recipients, ""];
       const newPercentages = [...percentages, ""];
       setRecipients(newRecipients);
       setPercentages(newPercentages);
-      updateFlowElements(newRecipients, newPercentages);
       console.log(
         "Added new recipient input. Total recipients:",
         recipients.length + 1
@@ -206,7 +214,6 @@ const Split = () => {
       const updatedPercentages = percentages.filter((_, i) => i !== index);
       setRecipients(updatedRecipients);
       setPercentages(updatedPercentages);
-      updateFlowElements(updatedRecipients, updatedPercentages);
       console.log(`Removed recipient at index ${index}`);
     } else {
       toast.error("Minimum 2 recipients required");
@@ -227,7 +234,6 @@ const Split = () => {
     const updatedPercentages = [...percentages];
     updatedPercentages[index] = numericValue;
     setPercentages(updatedPercentages);
-    updateFlowElements(recipients, updatedPercentages);
     console.log(`Percentage ${index + 1}:`, numericValue);
     console.log("All percentages:", updatedPercentages);
   };
@@ -378,60 +384,32 @@ const Split = () => {
         />
 
         <div className="flex w-full mt-16 gap-8 relative bg-black/10 border border-white/10 rounded-lg p-4">
-          {/* Left Side - React Flow Visualization - Hidden on tablet and mobile */}
-          <div className="relative w-1/2 h-96 hidden lg:block">
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-              nodeTypes={nodeTypes}
-              fitView={false}
-              style={{ background: "transparent" }}
-              nodesDraggable={false}
-              nodesConnectable={false}
-              elementsSelectable={false}
-            />
+          {/* Left Side - Fractions Source Box - Hidden on tablet and mobile */}
+          <div className="relative w-1/2 hidden lg:flex flex-col items-left z-10 p-16">
+            <div
+              className="w-fit px-6 py-4 text-white rounded-lg shadow-lg border-2 mb-8"
+              style={{ background: "#05162A", borderColor: "#0B78FD" }}
+            >
+              <div className="font-polysans font-semibold text-lg flex items-center gap-2">
+                <Image
+                  src="/assets/icons/fraction-git.svg"
+                  alt="SendAI"
+                  width={32}
+                  height={32}
+                  className="w-fit h-4 md:h-4"
+                />
+                Fraction
+              </div>
+            </div>
           </div>
 
-          {/* SVG Connections Bridge - Hidden on tablet and mobile */}
-          <svg
-            className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 pointer-events-none hidden lg:block"
-            width="200"
-            height="400"
-            style={{ left: "calc(50% - 100px)" }}
-          >
-            {recipients.map((_, index) => {
-              // Bridge coordinates from left section to right section
-              const startX = 20; // Start from left edge of SVG (connects to Fractions node)
-              const startY = 200; // Center height for Fractions node
-              const endX = 180; // End at right edge of SVG (connects to form inputs)
-              const endY = 50 + index * 85; // Position for each input field
-
-              return (
-                <g key={index}>
-                  <path
-                    d={`M ${startX} ${startY} Q 100 ${
-                      (startY + endY) / 2
-                    } ${endX} ${endY}`}
-                    stroke="#0B78FD"
-                    strokeWidth="1.5"
-                    fill="none"
-                    opacity="0.7"
-                  />
-                  {/* Connection point at the end */}
-                  <circle
-                    cx={endX}
-                    cy={endY}
-                    r="4"
-                    fill="#0B78FD"
-                    opacity="0.8"
-                  />
-                </g>
-              );
-            })}
-          </svg>
+          {/* Dynamic Connector - Hidden on tablet and mobile */}
+          <div className="absolute top-2 left-1/3 transform -translate-x-1/4 z-10 pointer-events-none hidden lg:block w-72">
+            <DynamicConnector
+              recipientCount={recipients.length}
+              percentages={percentages}
+            />
+          </div>
 
           {/* Right Side - Form Section - Full width on tablet and mobile */}
           <div className="flex flex-col gap-4 w-full lg:w-1/2">

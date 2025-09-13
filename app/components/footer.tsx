@@ -84,11 +84,11 @@ export default function Footer() {
               Twenty&apos;25 SendAI © All Rights Reserved
             </p>
             <div className="flex items-center">
-              <a href="/terms" className="hover:text-white transition-colors">
+              <a href="https://sendai.fun/tnc" target="_blank" className="hover:text-white transition-colors">
                 Terms & Conditions
               </a>
               <span className="mx-2">|</span>
-              <a href="/privacy" className="hover:text-white transition-colors">
+              <a href="https://sendai.fun/privacy" target="_blank" className="hover:text-white transition-colors">
                 Privacy Policy
               </a>
             </div>

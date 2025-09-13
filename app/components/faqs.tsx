@@ -96,7 +96,7 @@ const AccordionItem = ({
         }`}
       >
         <div className="px-6 pb-4">
-          <p className="text-white/80 font-polysans leading-relaxed">
+          <p className="text-white/60 font-polysans leading-relaxed">
             {item.answer}
           </p>
         </div>
