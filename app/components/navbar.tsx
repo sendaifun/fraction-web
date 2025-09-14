@@ -3,10 +3,63 @@
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, memo, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { useMotionTracking } from "../hooks/useMotionTracking";
 import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
+
+// Static Logo component that never re-renders
+const Logo = memo(() => {
+  return (
+    <div>
+      <Link href="/">
+        <Image
+          src="/assets/logos/fraction.svg"
+          alt="Fraction Logo"
+          width={120}
+          height={40}
+          className="h-8 w-auto"
+          priority
+        />
+      </Link>
+    </div>
+  );
+});
+
+Logo.displayName = "Logo";
+
+// Memoized WalletButton component to prevent re-renders
+const WalletButton = memo(() => <UnifiedWalletButton />);
+
+WalletButton.displayName = "WalletButton";
+
+// Memoized Navigation Links component
+const NavigationLinks = memo(({ pathname }: { pathname: string }) => (
+  <div className="hidden md:flex items-center gap-6">
+    <Link
+      href="/create"
+      className={`text-sm font-polysans font-medium transition-colors duration-200 ${
+        pathname === "/create"
+          ? "text-[#0B78FD]"
+          : "text-white/80 hover:text-white"
+      }`}
+    >
+      Create Fractions
+    </Link>
+    <Link
+      href="/list"
+      className={`text-sm font-polysans font-medium transition-colors duration-200 ${
+        pathname === "/list"
+          ? "text-[#0B78FD]"
+          : "text-white/80 hover:text-white"
+      }`}
+    >
+      Existing Fractions
+    </Link>
+  </div>
+));
+
+NavigationLinks.displayName = "NavigationLinks";
 
 const Navbar = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -14,84 +67,34 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  // Determine animation state once and never change it
+  const [shouldAnimate] = useState(() => {
+    // Only animate if we're initially on the home page
+    return pathname === "/";
+  });
+
   useMotionTracking(buttonRef);
   useMotionTracking(containerRef);
 
-  return (
-    <motion.nav
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="fixed top-0 left-0 right-0 z-50 px-6 py-4"
-    >
+  // Memoized Navbar content component to avoid unnecessary re-renders
+  const NavbarContent = useMemo(
+    () => (
       <div className="max-w-7xl mx-auto">
         <div
           ref={containerRef}
           className="glass rounded-full px-4 md:px-8 py-3.5 flex items-center justify-between relative"
         >
           {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          >
-            <Link href="/">
-              <Image
-                src="/assets/logos/fraction.svg"
-                alt="Fraction Logo"
-                width={120}
-                height={40}
-                className="h-8 w-auto"
-              />
-            </Link>
-          </motion.div>
+          <Logo />
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link
-              href="/create"
-              className={`text-sm font-polysans font-medium transition-colors duration-200 ${
-                pathname === "/create"
-                  ? "text-[#0B78FD]"
-                  : "text-white/80 hover:text-white"
-              }`}
-            >
-              Create Fractions
-            </Link>
-            <Link
-              href="/list"
-              className={`text-sm font-polysans font-medium transition-colors duration-200 ${
-                pathname === "/list"
-                  ? "text-[#0B78FD]"
-                  : "text-white/80 hover:text-white"
-              }`}
-            >
-              Existing Fractions
-            </Link>
-          </div>
+          <NavigationLinks pathname={pathname} />
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            {/* Connect Button */}
-            {/* <a
-              href=""
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass-button flex items-center gap-2 px-4 py-2 rounded-full"
-            >
-              <Image
-                src="/assets/icons/wallet.svg"
-                alt="Wallet Logo"
-                width={24}
-                height={24}
-                className="h-5 w-5"
-              />
-              <span className="text-white font-medium text-sm">
-                Connect Wallet
-              </span>
-            </a> */}
-
-            <UnifiedWalletButton />
+            <WalletButton />
           </div>
+
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <motion.button
@@ -126,6 +129,7 @@ const Navbar = () => {
             </motion.button>
           </div>
         </div>
+
         {/* Mobile Menu */}
         <AnimatePresence>
           {isMenuOpen && (
@@ -167,28 +171,24 @@ const Navbar = () => {
                     Existing Fractions
                   </span>
                 </Link>
-                {/* <a
-                      href=""
-                      className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full"
-                    >
-                      <Image
-                        src="/assets/icons/wallet.svg"
-                        alt="wallet icon"
-                        width={24}
-                        height={24}
-                        className="h-5 w-5"
-                      />
-                      <span className="text-white font-medium text-sm">
-                        Connect Wallet
-                      </span>
-                    </a> */}
-
-                <UnifiedWalletButton  buttonClassName="!glass-button !flex !items-center !justify-center !gap-2 !px-4 !py-2 !rounded-full" />
+                <UnifiedWalletButton buttonClassName="!glass-button !flex !items-center !justify-center !gap-2 !px-4 !py-2 !rounded-full" />
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
+    ),
+    [pathname, isMenuOpen, containerRef]
+  );
+
+  return (
+    <motion.nav
+      initial={shouldAnimate ? { opacity: 0, y: -20 } : { opacity: 1, y: 0 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: shouldAnimate ? 0.4 : 0 }}
+      className="fixed top-0 left-0 right-0 z-50 px-6 py-4"
+    >
+      {NavbarContent}
     </motion.nav>
   );
 };

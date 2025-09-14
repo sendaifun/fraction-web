@@ -50,6 +50,7 @@ const AccordionItem = ({
 }) => {
   return (
     <motion.div
+      onClick={onClick}
       className="border border-white/10 rounded-xl sm:p-6 backdrop-blur-sm"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -66,7 +67,6 @@ const AccordionItem = ({
     >
       <button
         className="w-full px-6 py-4 text-left flex justify-between items-center hover: transition-colors duration-200 rounded-xl focus:outline-none focus:ring-0 cursor-pointer"
-        onClick={onClick}
         aria-expanded={isOpen}
       >
         <span className="text-white font-polysans text-lg pr-4">

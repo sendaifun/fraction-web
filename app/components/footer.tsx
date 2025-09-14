@@ -47,14 +47,14 @@ export default function Footer() {
             viewport={{ once: true, margin: "-20px" }}
           >
             <motion.a
-              href="https://x.com/sendaifun"
+              href="https://sendai.fun"
               target="_blank"
               rel="noopener noreferrer"
               className="opacity-50 hover:opacity-100 transition-opacity"
               whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
             >
               <Image
-                src="/assets/icons/x.svg"
+                src="/assets/icons/site.svg"
                 alt="X (Twitter)"
                 width={24}
                 height={24}

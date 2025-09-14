@@ -254,6 +254,17 @@ const DynamicConnector = ({
   );
 };
 
+// Helper function to validate Solana public key
+const isValidPublicKey = (address: string): boolean => {
+  if (!address.trim()) return true; // Allow empty addresses
+  try {
+    new PublicKey(address.trim());
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 const Split = () => {
   const { connected, wallet, publicKey } = useWallet();
   const [recipients, setRecipients] = useState<string[]>(() =>
@@ -265,6 +276,17 @@ const Split = () => {
   const [fractionName, setFractionName] = useState<string>(() =>
     loadFromStorage(STORAGE_KEYS.FRACTION_NAME, "")
   );
+  const [recipientErrors, setRecipientErrors] = useState<boolean[]>(() =>
+    new Array(recipients.length).fill(false)
+  );
+
+  // Initialize error states for existing recipients
+  useEffect(() => {
+    const errors = recipients.map(
+      (recipient) => recipient.trim() !== "" && !isValidPublicKey(recipient)
+    );
+    setRecipientErrors(errors);
+  }, []); // Only run on mount
 
   // Save to localStorage whenever state changes
   useEffect(() => {
@@ -295,8 +317,10 @@ const Split = () => {
     if (recipients.length < 5) {
       const newRecipients = [...recipients, ""];
       const newPercentages = [...percentages, ""];
+      const newErrors = [...recipientErrors, false];
       setRecipients(newRecipients);
       setPercentages(newPercentages);
+      setRecipientErrors(newErrors);
       console.log(
         "Added new recipient input. Total recipients:",
         recipients.length + 1
@@ -310,8 +334,10 @@ const Split = () => {
     if (recipients.length > 2) {
       const updatedRecipients = recipients.filter((_, i) => i !== index);
       const updatedPercentages = percentages.filter((_, i) => i !== index);
+      const updatedErrors = recipientErrors.filter((_, i) => i !== index);
       setRecipients(updatedRecipients);
       setPercentages(updatedPercentages);
+      setRecipientErrors(updatedErrors);
       console.log(`Removed recipient at index ${index}`);
     } else {
       toast.error("Minimum 2 recipients required");
@@ -322,6 +348,12 @@ const Split = () => {
     const updatedRecipients = [...recipients];
     updatedRecipients[index] = value;
     setRecipients(updatedRecipients);
+
+    // Update error state for this recipient
+    const updatedErrors = [...recipientErrors];
+    updatedErrors[index] = value.trim() !== "" && !isValidPublicKey(value);
+    setRecipientErrors(updatedErrors);
+
     console.log(`Recipient ${index + 1}:`, value);
     console.log("All recipients:", updatedRecipients);
   };
@@ -349,13 +381,23 @@ const Split = () => {
       return;
     }
 
-    // Check if all recipients have addresses
+    // Check if all recipients have valid addresses
     const emptyRecipients = recipients.filter(
       (recipient, index) => !recipient.trim() && percentages[index].trim()
     );
 
     if (emptyRecipients.length > 0) {
       toast.error("Please fill in all recipient addresses");
+      return;
+    }
+
+    // Check for invalid public keys
+    const invalidRecipients = recipients.filter(
+      (recipient, index) => recipient.trim() && !isValidPublicKey(recipient)
+    );
+
+    if (invalidRecipients.length > 0) {
+      toast.error("Please enter valid Solana public key addresses");
       return;
     }
 
@@ -387,7 +429,7 @@ const Split = () => {
     }
 
     // Show loading toast only after all validations pass
-    toast.loading("Creating fraction...");
+    const loadingToastId = toast.loading("Creating fraction...");
 
     try {
       // Convert form data to participants array
@@ -455,7 +497,7 @@ const Split = () => {
           await connection.confirmTransaction(signature, "confirmed");
 
           // Success case
-          toast.dismiss(); // Dismiss loading toast
+          toast.dismiss(loadingToastId); // Dismiss specific loading toast
           toast.success(
             "Fraction created successfully! Transaction confirmed."
           );
@@ -471,16 +513,16 @@ const Split = () => {
           setFractionName("");
         } catch (signError) {
           console.error("Error signing or sending transaction:", signError);
-          toast.dismiss(); // Dismiss loading toast
+          toast.dismiss(loadingToastId); // Dismiss specific loading toast
           toast.error("Failed to sign or send transaction. Please try again.");
         }
       } else {
-        toast.dismiss(); // Dismiss loading toast
+        toast.dismiss(loadingToastId); // Dismiss specific loading toast
         toast.error("Wallet does not support transaction signing");
       }
     } catch (error) {
       console.error("Error creating fraction:", error);
-      toast.dismiss(); // Dismiss loading toast
+      toast.dismiss(loadingToastId); // Dismiss specific loading toast
       toast.error("Failed to create fraction. Please try again.");
     }
   };
@@ -537,14 +579,21 @@ const Split = () => {
           <div className="flex flex-col gap-4 w-full lg:w-1/2">
             <div className="flex flex-col gap-4">
               {recipients.map((recipient, index) => (
-                <div key={index} className="flex gap-4 items-end">
+                <div key={index} className="flex gap-4 items-start">
                   <Input
                     className="flex-1"
                     label={index === 0 ? "Recipients" : undefined}
                     placeholder="Enter Address.."
                     value={recipient}
                     onChange={(value) => updateRecipient(index, value)}
+                    error={recipientErrors[index]}
+                    errorMessage={
+                      recipientErrors[index]
+                        ? "Invalid Solana public key"
+                        : undefined
+                    }
                   />
+
                   <Input
                     className="w-24"
                     label={index === 0 ? "%" : undefined}
@@ -553,33 +602,35 @@ const Split = () => {
                     onChange={(value) => updatePercentage(index, value)}
                     type="text"
                   />
-                  <button
-                    onClick={() => removeRecipient(index)}
-                    className={`cursor-pointer w-4 h-4 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all duration-200 mb-4 ${
-                      recipients.length <= 2
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:scale-105"
-                    }`}
-                    disabled={recipients.length <= 2}
-                    title={
-                      recipients.length <= 2
-                        ? "Minimum 2 recipients required"
-                        : "Remove recipient"
-                    }
-                  >
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                  <div className="flex items-center" style={{ marginTop: index === 0 ? '40px' : '16px' }}>
+                    <button
+                      onClick={() => removeRecipient(index)}
+                      className={`cursor-pointer w-4 h-4 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all duration-200 ${
+                        recipients.length <= 2
+                          ? "opacity-50 cursor-not-allowed"
+                          : "hover:scale-105"
+                      }`}
+                      disabled={recipients.length <= 2}
+                      title={
+                        recipients.length <= 2
+                          ? "Minimum 2 recipients required"
+                          : "Remove recipient"
+                      }
                     >
-                      <path d="M5 12h14" />
-                    </svg>
-                  </button>
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M5 12h14" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               ))}
 
