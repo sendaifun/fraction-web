@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import TopBackground from "./components/common/TopBackground";
 import "./globals.css";
 import { Providers } from "./providers/walletproviders";
+import { Analytics } from "@vercel/analytics/next"
 
 const polySans = localFont({
   src: "../public/fonts/PolySansTrial-Median.otf",
@@ -74,6 +75,7 @@ export default function RootLayout({
             },
           }}
         />
+        <Analytics />
       </body>
     </html>
   );
