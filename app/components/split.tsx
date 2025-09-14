@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { fraction } from "../lib/fractionsdk";
 import Input from "./common/Input";
 import SectionHeader from "./common/SectionHeader";
+import Tooltip from "./common/Tooltip";
 
 // LocalStorage keys
 const STORAGE_KEYS = {
@@ -93,7 +94,7 @@ const getConnectorConfig = (numRecipients: number) => {
     // The horizontal position where the short connector line starts after the percentage box.
     shortConnectorStartX: 230,
     // The horizontal position where the short connector line ends, connecting to the input field.
-    shortConnectorEndX: 270,
+    shortConnectorEndX: 273,
   };
 };
 
@@ -210,28 +211,28 @@ const DynamicConnector = ({
             />
 
             {/* Connection dot at main path end */}
-            <circle
+            {/* <circle
               cx={CONNECTOR_CONFIG.branchEndAndLabelStartX}
               cy={yPosition}
               r="3"
               fill="#0B78FD"
-            />
+            /> */}
 
             {/* Connection dot at connecting line start */}
-            <circle
+            {/* <circle
               cx={CONNECTOR_CONFIG.shortConnectorStartX}
               cy={yPosition}
               r="2"
               fill="#0B78FD"
-            />
+            /> */}
 
             {/* Small dot at input box connection */}
-            <circle
+            {/* <circle
               cx={CONNECTOR_CONFIG.shortConnectorEndX}
               cy={yPosition}
               r="2"
               fill="#0B78FD"
-            />
+            /> */}
           </g>
         );
       })}
@@ -492,6 +493,19 @@ const Split = () => {
         <div className="flex w-full mt-16 gap-8 relative bg-black/10 border border-white/10 rounded-xl p-8">
           {/* Left Side - Fractions Source Box - Hidden on tablet and mobile */}
           <div className="relative w-1/2 hidden lg:flex flex-col items-left z-10 p-16">
+
+            <div className="w-fit absolute top-0 left-36 px-0 py-0 text-white font-polysans font-medium flex items-center gap-2">
+              <span>Fraction Address</span>
+              <Tooltip content="This is the obtained address that you can send SOL or SPL tokens to.">
+                <Image
+                  src="/assets/icons/tooltip.svg" // Using search icon as a placeholder
+                  alt="Info"
+                  width={16}
+                  height={16}
+                  className="cursor-pointer"
+                />
+              </Tooltip>
+            </div>
             <div
               className="w-fit absolute top-16 left-36 px-6 py-4 text-white rounded-lg shadow-lg border-2 mb-8"
               style={{ background: "#05162A", borderColor: "#0B78FD" }}
@@ -567,9 +581,10 @@ const Split = () => {
                 </div>
               ))}
 
+<div className="flex justify-end">
               <button
                 onClick={addRecipient}
-                className={`w-full px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none ${
+                className={`w-fit px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none ${
                   recipients.length >= 5
                     ? "text-gray-400 cursor-not-allowed opacity-50"
                     : "text-[#4E88F0] hover:bg-[#4E88F0]/10"
@@ -583,6 +598,7 @@ const Split = () => {
               >
                 Add Recipients {recipients.length >= 5 ? "(Max reached)" : ""}
               </button>
+              </div>
             </div>
 
             <div className="flex gap-4 mt-8">
@@ -609,26 +625,12 @@ const Split = () => {
                   >
                     Split
                   </button>
-                  {/* <button
-                    onClick={clearStoredData}
-                    className="px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none bg-gray-600 text-white hover:bg-gray-700"
-                    title="Clear all form data"
-                  >
-                    Clear
-                  </button> */}
                 </>
               ) : (
                 <div className="flex gap-4 w-full">
                   <div className="flex-1">
                     <UnifiedWalletButton buttonClassName="!w-full !px-4 !py-3 !rounded-lg !font-polysans !font-medium !transition-all !duration-200 !focus:outline-none !bg-[#4E88F0] !text-white hover:!bg-[#4E88F0]/90" />
                   </div>
-                  {/* <button
-                    onClick={clearStoredData}
-                    className="px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none bg-gray-600 text-white hover:bg-gray-700"
-                    title="Clear all form data"
-                  >
-                    Clear
-                  </button> */}
                 </div>
               )}
             </div>

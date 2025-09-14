@@ -63,6 +63,33 @@ const mockFractions: Fraction[] = [
     status: "Completed",
     createdAt: "2024-01-05",
   },
+  {
+    id: "6",
+    name: "Marketing Fund 2",
+    creator: "2Gh3232...223D6",
+    recipients: 2,
+    totalSplit: "3,400 USDC",
+    status: "Completed",
+    createdAt: "2024-01-05",
+  },
+  {
+    id: "7",
+    name: "Marketing Fund 3",
+    creator: "534dw...223D6",
+    recipients: 2,
+    totalSplit: "3,400 USDC",
+    status: "Completed",
+    createdAt: "2024-01-05",
+  },    
+  {
+    id: "8",
+    name: "Marketing Fund 4",
+    creator: "23csdd...223D6",
+    recipients: 2,
+    totalSplit: "3,400 USDC",
+    status: "Completed",
+    createdAt: "2024-01-05",
+  },
 ];
 
 export default function ListPage() {
@@ -123,7 +150,7 @@ export default function ListPage() {
                 {filteredFractions.map((fraction) => (
                   <div
                     key={fraction.id}
-                    className="flex-shrink-0 w-full max-w-[240px]  bg-[#0B78FD1A] border-t-[1.53px] border-l-[0.38px] border-r-[0.38px] border-b-[0.38px] border-[#0B78FD] rounded-xl p-6 hover:border-white/[0.08] hover:bg-[#0B78FD25] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10"
+                    className="flex-shrink-0 w-full max-w-[240px]  bg-[#0B78FD1A] border-t-[1.53px] border-l-[0.38px] border-r-[0.38px] border-b-[0.38px] border-[#0B78FD] rounded-xl p-6 hover:border-[#0B78FD]/[0.4] hover:bg-[#0B78FD25] transition-all duration-300 transform hover:-translate-y-1 "
                   >
                     {/* Header with name and status */}
                     <div className="flex items-start justify-between mb-4">

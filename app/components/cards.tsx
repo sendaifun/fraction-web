@@ -53,7 +53,7 @@ const Cards = () => {
           />
         </motion.div>
 
-        <div className="flex flex-col gap-8 m-2 md:flex-row">
+        <div className="flex flex-col gap-8 m-2 lg:flex-row">
           {cards.map((card, index) => (
             <motion.div
               key={index}

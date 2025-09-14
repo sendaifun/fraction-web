@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
+// cicular dep - didn't work
 import { TEXT_GRAY_1 } from "../lib/constants";
 
 export default function Footer() {
@@ -21,7 +22,7 @@ export default function Footer() {
         viewport={{ once: true, margin: "-50px" }}
       >
         <p
-          className={`text-[${TEXT_GRAY_1}]/40 text-sm leading-relaxed text-left`}
+          className={`text-[#B7CCF1]/40 text-sm leading-relaxed text-left`}
         >
           SendAI Fraction is just a visual interface on Fraction with all
           non-custodial, transfer, and trading services powered by third party
@@ -77,7 +78,7 @@ export default function Footer() {
 
           {/* Text content in single line */}
           <motion.div
-            className={`flex flex-col md:flex-row justify-between items-center text-sm gap-4 md:gap-0 text-[${TEXT_GRAY_1}]/40`}
+            className={`flex flex-col md:flex-row justify-between items-center text-sm gap-4 md:gap-0 text-[#B7CCF1]/40`}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
