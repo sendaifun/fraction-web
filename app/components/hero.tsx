@@ -16,6 +16,13 @@ const Hero = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         viewport={{ once: true, margin: "-100px" }}
       >
+        <Image
+          src="/assets/abstract/herobadge.svg"
+          alt="SendAI"
+          width={100}
+          height={100}
+          className="w-fit h-6 md:h-8 mb-4"
+        />
         <motion.div
           className="hidden sm:block"
           initial={{ opacity: 0, y: 24 }}

@@ -50,7 +50,7 @@ const Bento = () => {
             </motion.div>
           </div>
           <div
-            className="flex flex-col justify-center space-y-4 border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.6]"
+            className="flex flex-col justify-end space-y-4 border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.6]"
             style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px" }}
           >
             <motion.h3 
@@ -79,7 +79,7 @@ const Bento = () => {
         {/* Row 2: Text Left, Image Right */}
         <div className="flex flex-col lg:flex-row">
           <div
-            className="flex flex-col justify-center space-y-4 border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.6] order-2 lg:order-1"
+            className="flex flex-col justify-end space-y-4 border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.6] order-2 lg:order-1"
             style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px" }}
           >
             <motion.h3 
@@ -159,7 +159,7 @@ const Bento = () => {
             </motion.div>
           </div>
           <div
-            className="flex flex-col justify-center space-y-4 border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.6]"
+            className="flex flex-col justify-end space-y-4 border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.6]"
             style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px" }}
           >
             <motion.h3 

@@ -555,7 +555,7 @@ const Split = () => {
                   />
                   <button
                     onClick={() => removeRecipient(index)}
-                    className={`w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all duration-200 mb-2 ${
+                    className={`cursor-pointer w-4 h-4 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all duration-200 mb-4 ${
                       recipients.length <= 2
                         ? "opacity-50 cursor-not-allowed"
                         : "hover:scale-105"
@@ -586,7 +586,7 @@ const Split = () => {
               <div className="flex justify-end">
                 <button
                   onClick={addRecipient}
-                  className={`w-fit px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none ${
+                  className={`cursor-pointer w-fit px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none ${
                     recipients.length >= 5
                       ? "text-gray-400 cursor-not-allowed opacity-50"
                       : "text-[#4E88F0] hover:bg-[#4E88F0]/10"

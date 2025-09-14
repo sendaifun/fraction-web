@@ -12,7 +12,7 @@ export default function Home() {
       <div className="w-full h-full flex flex-col mx-auto px-2 sm:px-6 relative">
         <ScrollAnimatedBg />
         <Navbar />
-        <div className="mt-48 relative z-10">
+        <div className="mt-32 lg:mt-48 relative z-10">
           <Hero />
           <Bento />
 
