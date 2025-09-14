@@ -45,6 +45,58 @@ const loadFromStorage = (key: string, defaultValue: any) => {
   return defaultValue;
 };
 
+// Configuration for the DynamicConnector SVG.
+// This object centralizes all the magic numbers and settings for easy customization.
+const getConnectorConfig = (numRecipients: number) => {
+  let connectorStartY;
+  let firstRecipientY;
+  let recipientSpacing;
+
+  switch (numRecipients) {
+    case 2:
+      connectorStartY = 56; // 56 for 2 recipients
+      firstRecipientY = 28; // 28 for 2 recipients
+      recipientSpacing = 66; // Default spacing
+      break;
+    case 3:
+      connectorStartY = 72; // 72 for 3 recipients
+      firstRecipientY = 40; // 40 for 3 recipients
+      recipientSpacing = 66; // Default spacing
+      break;
+    case 4:
+      connectorStartY = 112; // 112 for 4 recipients
+      firstRecipientY = 68; // 68 for 4 recipients
+      recipientSpacing = 65; // 65 for 4 recipients
+      break;
+    default: // 5 or more recipients
+      connectorStartY = 112; // 112 for 5+ recipients
+      firstRecipientY = 68; // 68 for 5+ recipients
+      recipientSpacing = 66; // 66 for 5+ recipients
+      break;
+  }
+
+  return {
+    // The starting horizontal position (x-coordinate) of the main connector line on the left.
+    connectorStartX: 10,
+    // The fixed vertical position (y-coordinate) where the main connector line starts.
+    connectorStartY,
+    // The horizontal position (x-coordinate) where the central vertical line is drawn.
+    centerX: 110,
+    // The vertical position (y-coordinate) for the first recipient's branch.
+    firstRecipientY,
+    // The vertical spacing between each recipient's branch.
+    recipientSpacing,
+    // The horizontal position (x-coordinate) where the recipient branch line ends and the percentage box starts.
+    branchEndAndLabelStartX: 180,
+    // The horizontal position for the center of the percentage text.
+    percentageTextX: 205,
+    // The horizontal position where the short connector line starts after the percentage box.
+    shortConnectorStartX: 230,
+    // The horizontal position where the short connector line ends, connecting to the input field.
+    shortConnectorEndX: 270,
+  };
+};
+
 // Dynamic Connector Component
 const DynamicConnector = ({
   recipientCount,
@@ -53,19 +105,20 @@ const DynamicConnector = ({
   recipientCount: number;
   percentages: string[];
 }) => {
+  const CONNECTOR_CONFIG = getConnectorConfig(recipientCount);
+
   // Calculate height and positioning based on number of recipients
-  const connectorStartX = 0; // Horizontal start position for the main connector line
-  const connectorStartY = 104;
-  const startX = 110;
-  const startY = 32; // Start position to align with Fractions box (moved up)
-  const recipientSpacing = 72; // Space between each recipient input
   const totalHeight = Math.max(
     200,
-    startY + (recipientCount - 1) * recipientSpacing + 50
+    CONNECTOR_CONFIG.firstRecipientY +
+      (recipientCount - 1) * CONNECTOR_CONFIG.recipientSpacing +
+      48
   );
 
   // Calculate the middle point for the vertical line
-  const middleY = startY + ((recipientCount - 1) * recipientSpacing) / 2;
+  const middleY =
+    CONNECTOR_CONFIG.firstRecipientY +
+    ((recipientCount - 1) * CONNECTOR_CONFIG.recipientSpacing) / 2;
 
   return (
     <svg
@@ -79,44 +132,66 @@ const DynamicConnector = ({
     >
       {/* Main horizontal line from Fractions box to center */}
       <path
-        d={`M${connectorStartX} ${connectorStartY}L${startX} ${middleY}`}
+        d={`M${CONNECTOR_CONFIG.connectorStartX} ${CONNECTOR_CONFIG.connectorStartY}L${CONNECTOR_CONFIG.centerX} ${middleY}`}
         stroke="#0B78FD"
-        strokeWidth="1"
+        strokeWidth="0.8"
       />
 
       {/* Vertical connector line in the middle */}
       <path
-        d={`M${startX} ${startY}V${
-          startY + (recipientCount - 1) * recipientSpacing
-        }`}
+        d={`M${CONNECTOR_CONFIG.centerX} ${CONNECTOR_CONFIG.firstRecipientY + 4}V${
+          CONNECTOR_CONFIG.firstRecipientY +
+          (recipientCount - 1) * CONNECTOR_CONFIG.recipientSpacing
+        -4}`}
         stroke="#0B78FD"
-        strokeWidth="1"
+        strokeWidth="0.8"
       />
 
       {/* Generate branches for each recipient */}
       {Array.from({ length: recipientCount }).map((_, index) => {
-        const yPosition = startY + index * recipientSpacing;
+        const yPosition =
+          CONNECTOR_CONFIG.firstRecipientY +
+          index * CONNECTOR_CONFIG.recipientSpacing;
         const percentage = percentages[index] || "0";
         return (
           <g key={index}>
             {/* Main horizontal branch from center */}
             <path
-              d={`M${startX} ${yPosition}H180`}
+              d={
+                index === 0
+                  ? // Upward curve for the first recipient
+                    `M ${CONNECTOR_CONFIG.centerX},${yPosition + 5} Q ${
+                      CONNECTOR_CONFIG.centerX
+                    },${yPosition} ${
+                      CONNECTOR_CONFIG.centerX + 5
+                    },${yPosition} H ${
+                      CONNECTOR_CONFIG.branchEndAndLabelStartX
+                    }`
+                  : // Downward curve for subsequent recipients
+                    `M ${CONNECTOR_CONFIG.centerX},${yPosition - 5} Q ${
+                      CONNECTOR_CONFIG.centerX
+                    },${yPosition} ${
+                      CONNECTOR_CONFIG.centerX + 5
+                    },${yPosition} H ${
+                      CONNECTOR_CONFIG.branchEndAndLabelStartX
+                    }`
+              }
               stroke="#0B78FD"
-              strokeWidth="1"
+              strokeWidth="0.8"
+              fill="none"
             />
 
             {/* Percentage label with background */}
             <rect
-              x="185"
+              x={CONNECTOR_CONFIG.branchEndAndLabelStartX + 5}
               y={yPosition - 8}
               width="40"
               height="16"
-              strokeWidth="1"
+              strokeWidth="0.8"
               rx="4"
             />
             <text
-              x="205"
+              x={CONNECTOR_CONFIG.percentageTextX}
               y={yPosition + 3}
               fill="#0B78FD"
               fontSize="11"
@@ -129,28 +204,48 @@ const DynamicConnector = ({
 
             {/* Small connecting line to input box with gap */}
             <path
-              d={`M230 ${yPosition}H280`}
+              d={`M${CONNECTOR_CONFIG.shortConnectorStartX} ${yPosition}H${CONNECTOR_CONFIG.shortConnectorEndX}`}
               stroke="#0B78FD"
-              strokeWidth="1"
+              strokeWidth="0.8"
             />
 
             {/* Connection dot at main path end */}
-            <circle cx="180" cy={yPosition} r="3" fill="#0B78FD" />
+            <circle
+              cx={CONNECTOR_CONFIG.branchEndAndLabelStartX}
+              cy={yPosition}
+              r="3"
+              fill="#0B78FD"
+            />
 
             {/* Connection dot at connecting line start */}
-            <circle cx="230" cy={yPosition} r="2" fill="#0B78FD" />
+            <circle
+              cx={CONNECTOR_CONFIG.shortConnectorStartX}
+              cy={yPosition}
+              r="2"
+              fill="#0B78FD"
+            />
 
             {/* Small dot at input box connection */}
-            <circle cx="280" cy={yPosition} r="2" fill="#0B78FD" />
+            <circle
+              cx={CONNECTOR_CONFIG.shortConnectorEndX}
+              cy={yPosition}
+              r="2"
+              fill="#0B78FD"
+            />
           </g>
         );
       })}
 
       {/* Source connection dot */}
-      <circle cx={connectorStartX} cy={connectorStartY} r="3" fill="#0B78FD" />
+      <circle
+        cx={CONNECTOR_CONFIG.connectorStartX}
+        cy={CONNECTOR_CONFIG.connectorStartY}
+        r="3"
+        fill="#0B78FD"
+      />
 
       {/* Center junction dot */}
-      <circle cx={startX} cy={middleY} r="4" fill="#0B78FD" />
+      <circle cx={CONNECTOR_CONFIG.centerX} cy={middleY} r="4" fill="#0B78FD" />
     </svg>
   );
 };
@@ -398,7 +493,7 @@ const Split = () => {
           {/* Left Side - Fractions Source Box - Hidden on tablet and mobile */}
           <div className="relative w-1/2 hidden lg:flex flex-col items-left z-10 p-16">
             <div
-              className="w-fit px-6 py-4 text-white rounded-lg shadow-lg border-2 mb-8"
+              className="w-fit absolute top-16 left-36 px-6 py-4 text-white rounded-lg shadow-lg border-2 mb-8"
               style={{ background: "#05162A", borderColor: "#0B78FD" }}
             >
               <div className="font-polysans font-semibold text-lg flex items-center gap-2">
