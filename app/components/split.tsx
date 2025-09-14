@@ -140,10 +140,13 @@ const DynamicConnector = ({
 
       {/* Vertical connector line in the middle */}
       <path
-        d={`M${CONNECTOR_CONFIG.centerX} ${CONNECTOR_CONFIG.firstRecipientY + 4}V${
+        d={`M${CONNECTOR_CONFIG.centerX} ${
+          CONNECTOR_CONFIG.firstRecipientY + 4
+        }V${
           CONNECTOR_CONFIG.firstRecipientY +
-          (recipientCount - 1) * CONNECTOR_CONFIG.recipientSpacing
-        -4}`}
+          (recipientCount - 1) * CONNECTOR_CONFIG.recipientSpacing -
+          4
+        }`}
         stroke="#0B78FD"
         strokeWidth="0.8"
       />
@@ -493,7 +496,6 @@ const Split = () => {
         <div className="flex w-full mt-16 gap-8 relative bg-black/10 border border-white/10 rounded-xl p-8">
           {/* Left Side - Fractions Source Box - Hidden on tablet and mobile */}
           <div className="relative w-1/2 hidden lg:flex flex-col items-left z-10 p-16">
-
             <div className="w-fit absolute top-0 left-36 px-0 py-0 text-white font-polysans font-medium flex items-center gap-2">
               <span>Fraction Address</span>
               <Tooltip content="This is the obtained address that you can send SOL or SPL tokens to.">
@@ -524,7 +526,7 @@ const Split = () => {
           </div>
 
           {/* Dynamic Connector - Hidden on tablet and mobile */}
-          <div className="absolute top-2 left-1/3 transform -translate-x-1/4 z-10 pointer-events-none hidden lg:block w-72">
+          <div className="absolute top-2 left-1/3 transform -translate-x-1/4 pointer-events-none hidden lg:block w-72 lg:max-[1100px]:-ml-6 lg:max-[1200px]:-ml-3 lg:max-[1201px]:-ml-0 z-0">
             <DynamicConnector
               recipientCount={recipients.length}
               percentages={percentages}
@@ -581,23 +583,23 @@ const Split = () => {
                 </div>
               ))}
 
-<div className="flex justify-end">
-              <button
-                onClick={addRecipient}
-                className={`w-fit px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none ${
-                  recipients.length >= 5
-                    ? "text-gray-400 cursor-not-allowed opacity-50"
-                    : "text-[#4E88F0] hover:bg-[#4E88F0]/10"
-                }`}
-                disabled={recipients.length >= 5}
-                title={
-                  recipients.length >= 5
-                    ? "Maximum 5 recipients allowed"
-                    : "Add a new recipient"
-                }
-              >
-                Add Recipients {recipients.length >= 5 ? "(Max reached)" : ""}
-              </button>
+              <div className="flex justify-end">
+                <button
+                  onClick={addRecipient}
+                  className={`w-fit px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none ${
+                    recipients.length >= 5
+                      ? "text-gray-400 cursor-not-allowed opacity-50"
+                      : "text-[#4E88F0] hover:bg-[#4E88F0]/10"
+                  }`}
+                  disabled={recipients.length >= 5}
+                  title={
+                    recipients.length >= 5
+                      ? "Maximum 5 recipients allowed"
+                      : "Add a new recipient"
+                  }
+                >
+                  Add Recipients {recipients.length >= 5 ? "(Max reached)" : ""}
+                </button>
               </div>
             </div>
 

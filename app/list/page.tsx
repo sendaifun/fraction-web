@@ -80,7 +80,7 @@ const mockFractions: Fraction[] = [
     totalSplit: "3,400 USDC",
     status: "Completed",
     createdAt: "2024-01-05",
-  },    
+  },
   {
     id: "8",
     name: "Marketing Fund 4",
@@ -167,10 +167,10 @@ export default function ListPage() {
                     {/* Card content */}
                     <div className="space-y-4">
                       <div>
-                        <div className="text-gray-400 font-polysans text-sm mb-1">
+                        <div className="text-gray-400 font-polysans text-xs">
                           Fraction Address
                         </div>
-                        <div className="text-white font-polysans font-mono text-sm bg-black/20 px-3 py-2 rounded border border-white/5 flex items-center gap-2 justify-between">
+                        <div className="text-white font-polysans font-mono text-sm  px-0 py-1 rounded flex items-center gap-2 justify-between">
                           {fraction.creator}
 
                           <button

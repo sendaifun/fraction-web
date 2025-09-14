@@ -65,7 +65,7 @@ const AccordionItem = ({
       }}
     >
       <button
-        className="w-full px-6 py-4 text-left flex justify-between items-center hover: transition-colors duration-200 rounded-xl focus:outline-none focus:ring-0"
+        className="w-full px-6 py-4 text-left flex justify-between items-center hover: transition-colors duration-200 rounded-xl focus:outline-none focus:ring-0 cursor-pointer"
         onClick={onClick}
         aria-expanded={isOpen}
       >
@@ -132,7 +132,7 @@ const Faqs = () => {
             subtitle="Everything you need to know about Fractions"
           />
         </motion.div>
-        <div className="w-full max-w-7xl flex flex-col gap-4">
+        <div className="w-full max-w-7xl flex flex-col gap-4 cursor-pointer">
           {faqData.map((item, index) => (
             <AccordionItem
               key={index}
