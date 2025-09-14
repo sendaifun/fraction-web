@@ -377,13 +377,13 @@ const Split = () => {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <SectionHeader
           title="Create your own Fractions"
           subtitle="Fraction is a Solana program that splits all incoming SPL tokens (eg. USDC) among the recipients according to the allocated % shares."
         />
 
-        <div className="flex w-full mt-16 gap-8 relative bg-black/10 border border-white/10 rounded-lg p-4">
+        <div className="flex w-full mt-16 gap-8 relative bg-black/10 border border-white/10 rounded-xl p-8">
           {/* Left Side - Fractions Source Box - Hidden on tablet and mobile */}
           <div className="relative w-1/2 hidden lg:flex flex-col items-left z-10 p-16">
             <div

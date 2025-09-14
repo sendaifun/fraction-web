@@ -9,6 +9,8 @@ export const STROKE_GRAY_2 = "#757575";
 export const CTA_BLUE_1 = "#0B78FD";
 export const CTA_BLUE_2 = "#4E88F0";
 
+export const TEXT_GRAY_1 = "#B7CCF1"; //footer text
+
 // Create Solana connection
 export const connection = new SolanaConnection(
   process.env.NEXT_PUBLIC_RPC_URL || ""

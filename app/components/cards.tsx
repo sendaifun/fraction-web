@@ -57,7 +57,8 @@ const Cards = () => {
           {cards.map((card, index) => (
             <motion.div
               key={index}
-              className="bg-black/20 border border-gray-800/50 rounded-lg p-6 hover:border-gray-700/50 transition-colors duration-300"
+              style={{ borderWidth: "0.5px" }}
+              className="bg-black/20 border border-[#585858] rounded-lg p-6 hover:border-[#585858] transition-colors duration-300"
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ 

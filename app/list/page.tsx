@@ -93,7 +93,7 @@ export default function ListPage() {
       <div className="w-full h-full flex flex-col mx-auto px-6">
         <Navbar />
         <div className="mt-32">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <SectionHeader
               title="Existing Fraction"
               subtitle="Fraction is a Solana program that splits all incoming SPL tokens (eg. USDC) among the recipients according to the allocated % shares."
@@ -108,8 +108,8 @@ export default function ListPage() {
               />
             </div>
 
-            <div className="w-full bg-black/10 border border-white/10 rounded-lg p-8 mt-16">
-              <div className="w-full mb-8">
+            <div className="w-full bg-black/10 border border-white/10 rounded-xl p-8 mt-16">
+              <div className="w-full mb-8 px-4">
                 <Input
                   className="w-full"
                   // label="Search Fractions"
@@ -119,11 +119,11 @@ export default function ListPage() {
                   icon="/assets/icons/search.svg"
                 />
               </div>
-              <div className="flex flex-wrap gap-4 justify-center w-full">
+              <div className="flex flex-wrap gap-8 justify-center w-full">
                 {filteredFractions.map((fraction) => (
                   <div
                     key={fraction.id}
-                    className="flex-shrink-0 w-full max-w-xs  bg-[#0B78FD1A] border-t-[1.53px] border-l-[0.38px] border-r-[0.38px] border-b-[0.38px] border-[#0B78FD] rounded-xl p-6 hover:border-white/[0.08] hover:bg-[#0B78FD25] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10"
+                    className="flex-shrink-0 w-full max-w-[240px]  bg-[#0B78FD1A] border-t-[1.53px] border-l-[0.38px] border-r-[0.38px] border-b-[0.38px] border-[#0B78FD] rounded-xl p-6 hover:border-white/[0.08] hover:bg-[#0B78FD25] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10"
                   >
                     {/* Header with name and status */}
                     <div className="flex items-start justify-between mb-4">

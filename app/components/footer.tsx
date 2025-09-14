@@ -2,31 +2,34 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
+import { TEXT_GRAY_1 } from "../lib/constants";
 
 export default function Footer() {
   return (
-    <motion.footer 
+    <motion.footer
       className="mt-32 relative"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
       viewport={{ once: true, margin: "-100px" }}
     >
-      <motion.div 
+      <motion.div
         className=" max-w-7xl mx-auto px-6"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         viewport={{ once: true, margin: "-50px" }}
       >
-        <p className="text-white/50 text-sm leading-relaxed text-left">
+        <p
+          className={`text-[${TEXT_GRAY_1}]/40 text-sm leading-relaxed text-left`}
+        >
           SendAI Fraction is just a visual interface on Fraction with all
           non-custodial, transfer, and trading services powered by third party
           services like Jupiter, Birdeye, Privy, and more.
         </p>
       </motion.div>
 
-      <motion.div 
+      <motion.div
         className="max-w-7xl mx-auto px-6 pb-16 pt-4"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -35,7 +38,7 @@ export default function Footer() {
       >
         <div className="flex flex-col border-t border-white/10 pt-12">
           {/* Social Icons */}
-          <motion.div 
+          <motion.div
             className="flex gap-4 mb-6"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -73,22 +76,31 @@ export default function Footer() {
           </motion.div>
 
           {/* Text content in single line */}
-          <motion.div 
-            className="flex flex-col md:flex-row justify-between items-center text-sm text-white/50 gap-4 md:gap-0"
+          <motion.div
+            className={`flex flex-col md:flex-row justify-between items-center text-sm gap-4 md:gap-0 text-[${TEXT_GRAY_1}]/40`}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
             viewport={{ once: true, margin: "-20px" }}
           >
             <p className="text-center md:text-left">
-              Twenty&apos;25 SendAI © All Rights Reserved
+              Twenty&apos;25 SendAI
+              <br />© All Rights Reserved
             </p>
             <div className="flex items-center">
-              <a href="https://sendai.fun/tnc" target="_blank" className="hover:text-white transition-colors">
+              <a
+                href="https://sendai.fun/tnc"
+                target="_blank"
+                className="hover:text-white transition-colors"
+              >
                 Terms & Conditions
               </a>
               <span className="mx-2">|</span>
-              <a href="https://sendai.fun/privacy" target="_blank" className="hover:text-white transition-colors">
+              <a
+                href="https://sendai.fun/privacy"
+                target="_blank"
+                className="hover:text-white transition-colors"
+              >
                 Privacy Policy
               </a>
             </div>
@@ -97,13 +109,7 @@ export default function Footer() {
       </motion.div>
 
       {/* Abstract background */}
-      <motion.div 
-        className=" max-w-7xl mx-auto bottom-0 left-0 right-0 pointer-events-none"
-        initial={{ opacity: 0, scale: 0.9 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
-        viewport={{ once: true, margin: "-50px" }}
-      >
+      <motion.div className=" max-w-7xl mx-8 xl:mx-20 bottom-0 left-0 right-0 pointer-events-none mb-16">
         <Image
           src="/assets/bgs/footerabs.svg"
           alt=""

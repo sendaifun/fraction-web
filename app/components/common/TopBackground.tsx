@@ -15,7 +15,7 @@ export default function TopBackground() {
         <div 
           className="absolute top-0 left-0 w-full h-full blur-3xl"
           style={{
-            background: "radial-gradient(circle at 50% 20%, rgba(19, 85, 166, 0.3) 0%, rgba(7, 54, 98, 0.1) 50%, transparent 70%)"
+            background: "radial-gradient(circle at 50% 20%, rgba(19, 85, 166, 0.3) 0%, transparent 60%)"
           }}
         />
       </div>

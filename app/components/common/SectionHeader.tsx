@@ -4,7 +4,7 @@ const SectionHeader = ({ title, subtitle }: { title: string, subtitle: string })
       <p className="text-white text-4xl  font-polysans text-center">
         {title}
       </p>
-      <p className="text-white text-md max-w-2xl text-center font-polysans">
+      <p className="text-white/80 text-md max-w-2xl text-center font-polysans">
         {subtitle}
       </p>
     </div>
