@@ -2,20 +2,17 @@
 
 import { botWallet, connection } from "@/app/lib/constants";
 import { UnifiedWalletButton, useWallet } from "@jup-ag/wallet-adapter";
-import { Fraction } from "@sendaifun/fraction";
 import {
   PublicKey,
   SystemProgram,
   VersionedTransaction,
 } from "@solana/web3.js";
-import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { fraction } from "../lib/fractionsdk";
 import Input from "./common/Input";
 import SectionHeader from "./common/SectionHeader";
-import Image from "next/image";
-
-// Create a new fraction instance and call createFraction method
-const fraction = new Fraction(process.env.NEXT_PUBLIC_RPC_URL || "");
 
 // LocalStorage keys
 const STORAGE_KEYS = {
@@ -24,7 +21,7 @@ const STORAGE_KEYS = {
   FRACTION_NAME: "fraction-name",
 };
 
-// Helper functions for localStorage
+// Helper functions for localStorage - for storing the form data on refresh
 const saveToStorage = (key: string, value: any) => {
   if (typeof window !== "undefined") {
     try {
@@ -89,7 +86,9 @@ const DynamicConnector = ({
 
       {/* Vertical connector line in the middle */}
       <path
-        d={`M${startX} ${startY}V${startY + (recipientCount - 1) * recipientSpacing}`}
+        d={`M${startX} ${startY}V${
+          startY + (recipientCount - 1) * recipientSpacing
+        }`}
         stroke="#0B78FD"
         strokeWidth="1"
       />
@@ -288,6 +287,9 @@ const Split = () => {
       return;
     }
 
+    // Show loading toast only after all validations pass
+    toast.loading("Creating fraction...");
+
     try {
       // Convert form data to participants array
       const participants = recipients
@@ -354,6 +356,7 @@ const Split = () => {
           await connection.confirmTransaction(signature, "confirmed");
 
           // Success case
+          toast.dismiss(); // Dismiss loading toast
           toast.success(
             "Fraction created successfully! Transaction confirmed."
           );
@@ -362,15 +365,23 @@ const Split = () => {
           console.log("Transaction signature:", signature);
           console.log("Bot wallet generated:", botWallet.publicKey.toString());
           console.log("Fraction Config PDA:", fractionConfigPda);
+
+          // clear the form data
+          setRecipients(["", ""]);
+          setPercentages(["", ""]);
+          setFractionName("");
         } catch (signError) {
           console.error("Error signing or sending transaction:", signError);
+          toast.dismiss(); // Dismiss loading toast
           toast.error("Failed to sign or send transaction. Please try again.");
         }
       } else {
+        toast.dismiss(); // Dismiss loading toast
         toast.error("Wallet does not support transaction signing");
       }
     } catch (error) {
       console.error("Error creating fraction:", error);
+      toast.dismiss(); // Dismiss loading toast
       toast.error("Failed to create fraction. Please try again.");
     }
   };
