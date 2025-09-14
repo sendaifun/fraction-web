@@ -6,7 +6,12 @@ import AnimatedBackground from "./AnimatedBackground";
 export default function TopBackground() {
   const pathname = usePathname();
 
-  // Use radial gradient background on /create and /list routes
+  // exclude the routes which are NOT using BOTH the radial gradient or animated background
+  if (pathname === "/") {
+    return null;
+  }
+
+  // the routes which use only the radial gradient
   const useRadialGradient = pathname === "/create" || pathname === "/list";
 
   if (useRadialGradient) {
