@@ -1,8 +1,13 @@
 "use client";
 
-import Image from "next/image";
+import Lottie from "lottie-react";
 import { motion } from "motion/react";
 import { STROKE_GRAY_1 } from "../lib/constants";
+
+// Import Lottie animations
+import keyAnimation from "../../public/animations/key.json";
+import lockAnimation from "../../public/animations/lock.json";
+import loopAnimation from "../../public/animations/loop.json";
 
 const Bento = () => {
   return (
@@ -15,9 +20,7 @@ const Bento = () => {
     >
       <motion.div
         className="border"
-        style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px", 
-            //  borderTop: "none", borderLeft: "none", borderBottom: "none", borderRight: "none", 
-        }}
+        style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px" }}
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -28,9 +31,6 @@ const Bento = () => {
           <div
             className="flex justify-center items-center border-[0.1px] p-6 lg:flex-[0.4] relative aspect-square"
             style={{
-              borderTop: "none",
-              borderLeft: "none",
-              borderBottom: "none",
               borderColor: STROKE_GRAY_1,
               borderWidth: "0.1px",
               backgroundImage: "url('/assets/bento/cardbg.svg')",
@@ -44,13 +44,13 @@ const Bento = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
               viewport={{ once: true, margin: "-50px" }}
+              className="w-full max-w-md h-auto max-h-80 relative z-10"
             >
-              <Image
-                src="/assets/bento/illust1.svg"
-                alt="Deposit and split illustration"
-                width={400}
-                height={300}
-                className="w-full max-w-md h-auto max-h-80 relative z-10"
+              <Lottie
+                animationData={loopAnimation}
+                loop={true}
+                autoplay={true}
+                style={{ width: "100%", height: "100%" }}
               />
             </motion.div>
           </div>
@@ -59,7 +59,6 @@ const Bento = () => {
             style={{
               borderColor: STROKE_GRAY_1,
               borderWidth: "0.1px",
-              border: "none",
             }}
           >
             <motion.h3
@@ -92,9 +91,6 @@ const Bento = () => {
             style={{
               borderColor: STROKE_GRAY_1,
               borderWidth: "0.1px",
-              borderLeft: "none",
-              borderRight: "none",
-              borderBottom: "none",
             }}
           >
             <motion.h3
@@ -123,7 +119,6 @@ const Bento = () => {
             style={{
               borderColor: STROKE_GRAY_1,
               borderWidth: "0.1px",
-              borderTop: "none", borderLeft: "none", borderBottom: "none", borderRight: "none",
               backgroundImage: "url('/assets/bento/cardbg.svg')",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
@@ -135,13 +130,13 @@ const Bento = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
               viewport={{ once: true, margin: "-50px" }}
+              className="w-full max-w-md h-auto max-h-80 relative z-10"
             >
-              <Image
-                src="/assets/bento/illust2.svg"
-                alt="Integration illustration"
-                width={400}
-                height={300}
-                className="w-full max-w-md h-auto max-h-80 relative z-10"
+              <Lottie
+                animationData={keyAnimation}
+                loop={true}
+                autoplay={true}
+                style={{ width: "100%", height: "100%" }}
               />
             </motion.div>
           </div>
@@ -152,7 +147,6 @@ const Bento = () => {
           <div
             className="flex justify-center items-center border-[0.1px] p-6 lg:flex-[0.4] relative aspect-square"
             style={{
-              borderTop: "none", borderLeft: "none", borderBottom: "none", borderRight: "none",
               borderColor: STROKE_GRAY_1,
               backgroundImage: "url('/assets/bento/cardbg.svg')",
               backgroundRepeat: "no-repeat",
@@ -165,19 +159,19 @@ const Bento = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
               viewport={{ once: true, margin: "-50px" }}
+              className="w-full max-w-md h-auto max-h-80 relative z-10"
             >
-              <Image
-                src="/assets/bento/illust3.svg"
-                alt="Trusted and audited illustration"
-                width={400}
-                height={300}
-                className="w-full max-w-md h-auto max-h-80 relative z-10"
+              <Lottie
+                animationData={lockAnimation}
+                loop={true}
+                autoplay={true}
+                style={{ width: "100%", height: "100%" }}
               />
             </motion.div>
           </div>
           <div
             className="flex flex-col justify-end space-y-4 border-[0.1px] px-16 py-8 min-h-[300px] lg:flex-[0.6]"
-            style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px", borderLeft: "none", borderBottom: "none", borderRight: "none" }}
+            style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px" }}
           >
             <motion.h3
               className="text-2xl lg:text-3xl font-bold text-white"
