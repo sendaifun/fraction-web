@@ -16,40 +16,52 @@ import Input from "./common/Input";
 import SectionHeader from "./common/SectionHeader";
 import Tooltip from "./common/Tooltip";
 import { isValidPublicKey } from "../lib/solana";
-import { STORAGE_KEYS, loadFromStorage, saveToStorage } from "../lib/localstorage";
+import {
+  STORAGE_KEYS,
+  loadFromStorage,
+  saveToStorage,
+} from "../lib/localstorage";
 
 // Configuration for the DynamicConnector SVG.
 // This object centralizes all the magic numbers and settings for easy customization.
-const getConnectorConfig = (numRecipients: number) => {
+const getConnectorConfig = (
+  numRecipients: number,
+  recipientErrors: boolean[]
+) => {
   let connectorStartY;
   let firstRecipientY;
   let recipientSpacing;
   let fractionBoxPosition;
 
+  // Calculate how many recipients have errors to adjust spacing
+  const errorCount = recipientErrors.filter(Boolean).length;
+  // Each error message adds approximately 20px of height (text + margin)
+  const errorSpacingAdjustment = errorCount > 0 ? 12 : 0;
+
   switch (numRecipients) {
     case 2:
-      connectorStartY = 61; // 56 for 2 recipients
-      firstRecipientY = 28; // 28 for 2 recipients
-      recipientSpacing = 66; // Default spacing
-      fractionBoxPosition = "top-14"; // top-14 for 2 recipients
+      connectorStartY = 64 + errorSpacingAdjustment;
+      firstRecipientY = 34;
+      recipientSpacing = 56 + (recipientErrors[0] ? 1 : 0); // Adjust spacing for first recipient error
+      fractionBoxPosition = errorCount > 0 ? "top-20" : "top-14";
       break;
     case 3:
-      connectorStartY = 106; // 72 for 3 recipients
-      firstRecipientY = 40; // 40 for 3 recipients
-      recipientSpacing = 66; // Default spacing
-      fractionBoxPosition = "top-22"; // top-22 for 3 recipients
+      connectorStartY = 130 + errorSpacingAdjustment;
+      firstRecipientY = 60;
+      recipientSpacing = 66;
+      fractionBoxPosition = errorCount > 0 ? "top-28" : "top-24";
       break;
     case 4:
-      connectorStartY = 165; // 112 for 4 recipients
-      firstRecipientY = 68; // 68 for 4 recipients
-      recipientSpacing = 65; // 65 for 4 recipients
-      fractionBoxPosition = "top-28"; // top-28 for 4 recipients
+      connectorStartY = 165 + errorSpacingAdjustment;
+      firstRecipientY = 68;
+      recipientSpacing = 65;
+      fractionBoxPosition = errorCount > 0 ? "top-34" : "top-28";
       break;
     default: // 5 or more recipients
-      connectorStartY = 200; // 112 for 5+ recipients
-      firstRecipientY = 68; // 68 for 5+ recipients
-      recipientSpacing = 66; // 66 for 5+ recipients
-      fractionBoxPosition = "top-36"; // top-36 for 5+ recipients
+      connectorStartY = 200 + errorSpacingAdjustment;
+      firstRecipientY = 68;
+      recipientSpacing = 66;
+      fractionBoxPosition = errorCount > 0 ? "top-40" : "top-36";
       break;
   }
 
@@ -73,6 +85,19 @@ const getConnectorConfig = (numRecipients: number) => {
     // The horizontal position where the short connector line ends, connecting to the input field.
     shortConnectorEndX: 273,
     fractionBoxPosition,
+    // New property to track individual recipient error adjustments
+    getRecipientYPosition: (index: number) => {
+      let yPosition = firstRecipientY;
+      // Add cumulative spacing adjustments for each recipient up to this index
+      for (let i = 0; i < index; i++) {
+        yPosition += recipientSpacing;
+        // Add extra spacing if the previous recipient had an error
+        if (recipientErrors[i]) {
+          yPosition += 32;
+        }
+      }
+      return yPosition;
+    },
   };
 };
 
@@ -80,24 +105,23 @@ const getConnectorConfig = (numRecipients: number) => {
 const DynamicConnector = ({
   recipientCount,
   percentages,
+  recipientErrors,
 }: {
   recipientCount: number;
   percentages: string[];
+  recipientErrors: boolean[];
 }) => {
-  const CONNECTOR_CONFIG = getConnectorConfig(recipientCount);
+  const CONNECTOR_CONFIG = getConnectorConfig(recipientCount, recipientErrors);
 
-  // Calculate height and positioning based on number of recipients
-  const totalHeight = Math.max(
-    200,
-    CONNECTOR_CONFIG.firstRecipientY +
-      (recipientCount - 1) * CONNECTOR_CONFIG.recipientSpacing +
-      48
+  // Calculate height and positioning based on number of recipients and errors
+  const lastRecipientY = CONNECTOR_CONFIG.getRecipientYPosition(
+    recipientCount - 1
   );
+  const totalHeight = Math.max(200, lastRecipientY + 48);
 
-  // Calculate the middle point for the vertical line
-  const middleY =
-    CONNECTOR_CONFIG.firstRecipientY +
-    ((recipientCount - 1) * CONNECTOR_CONFIG.recipientSpacing) / 2;
+  // Calculate the middle point for the vertical line based on first and last recipient positions
+  const firstRecipientY = CONNECTOR_CONFIG.getRecipientYPosition(0);
+  const middleY = (firstRecipientY + lastRecipientY) / 2;
 
   return (
     <svg
@@ -118,12 +142,8 @@ const DynamicConnector = ({
 
       {/* Vertical connector line in the middle */}
       <path
-        d={`M${CONNECTOR_CONFIG.centerX} ${
-          CONNECTOR_CONFIG.firstRecipientY + 4
-        }V${
-          CONNECTOR_CONFIG.firstRecipientY +
-          (recipientCount - 1) * CONNECTOR_CONFIG.recipientSpacing -
-          4
+        d={`M${CONNECTOR_CONFIG.centerX} ${firstRecipientY + 4}V${
+          lastRecipientY - 4
         }`}
         stroke="#0B78FD"
         strokeWidth="0.8"
@@ -131,9 +151,7 @@ const DynamicConnector = ({
 
       {/* Generate branches for each recipient */}
       {Array.from({ length: recipientCount }).map((_, index) => {
-        const yPosition =
-          CONNECTOR_CONFIG.firstRecipientY +
-          index * CONNECTOR_CONFIG.recipientSpacing;
+        const yPosition = CONNECTOR_CONFIG.getRecipientYPosition(index);
         const percentage = percentages[index] || "0";
         return (
           <g key={index}>
@@ -237,22 +255,29 @@ const Split = () => {
   const [recipients, setRecipients] = useState<string[]>(["", ""]);
   const [percentages, setPercentages] = useState<string[]>(["", ""]);
   const [fractionName, setFractionName] = useState<string>("");
-  const [recipientErrors, setRecipientErrors] = useState<boolean[]>([false, false]);
+  const [recipientErrors, setRecipientErrors] = useState<boolean[]>([
+    false,
+    false,
+  ]);
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Load from localStorage after hydration - SSR
   useEffect(() => {
     const storedRecipients = loadFromStorage(STORAGE_KEYS.RECIPIENTS, ["", ""]);
-    const storedPercentages = loadFromStorage(STORAGE_KEYS.PERCENTAGES, ["", ""]);
+    const storedPercentages = loadFromStorage(STORAGE_KEYS.PERCENTAGES, [
+      "",
+      "",
+    ]);
     const storedFractionName = loadFromStorage(STORAGE_KEYS.FRACTION_NAME, "");
-    
+
     setRecipients(storedRecipients);
     setPercentages(storedPercentages);
     setFractionName(storedFractionName);
-    
+
     // Initialize error states for loaded recipients
     const errors = storedRecipients.map(
-      (recipient: string) => recipient.trim() !== "" && !isValidPublicKey(recipient)
+      (recipient: string) =>
+        recipient.trim() !== "" && !isValidPublicKey(recipient)
     );
     setRecipientErrors(errors);
     setIsHydrated(true);
@@ -295,12 +320,14 @@ const Split = () => {
       const newRecipients = [...recipients, ""];
 
       const newPercentages = [...percentages];
-      const lastPercentage = parseFloat(newPercentages[newPercentages.length - 1] || "0");
+      const lastPercentage = parseFloat(
+        newPercentages[newPercentages.length - 1] || "0"
+      );
       const half = lastPercentage / 2;
       const halfStr = parseFloat(half.toFixed(2)).toString();
       newPercentages[newPercentages.length - 1] = halfStr;
       newPercentages.push(halfStr);
-      
+
       const newErrors = [...recipientErrors, false];
       setRecipients(newRecipients);
       setPercentages(newPercentages);
@@ -575,7 +602,10 @@ const Split = () => {
               </Tooltip>
             </div>
             <div
-              className={`w-fit absolute ${getConnectorConfig(recipients.length)?.fractionBoxPosition} left-36 px-6 py-4 text-white rounded-lg shadow-lg border-2 mb-8`}
+              className={`w-fit absolute ${
+                getConnectorConfig(recipients.length, recipientErrors)
+                  ?.fractionBoxPosition
+              } left-36 px-6 py-4 text-white rounded-lg shadow-lg border-2 mb-8`}
               style={{ background: "#05162A", borderColor: "#0B78FD" }}
             >
               <div className="font-polysans font-semibold text-lg flex items-center gap-2">
@@ -596,6 +626,7 @@ const Split = () => {
             <DynamicConnector
               recipientCount={recipients.length}
               percentages={percentages}
+              recipientErrors={recipientErrors}
             />
           </div>
 
