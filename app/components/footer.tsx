@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
-// cicular dep - didn't work
-import { TEXT_GRAY_1 } from "../lib/constants";
 
 export default function Footer() {
   return (

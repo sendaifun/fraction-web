@@ -29,7 +29,7 @@ const Logo = memo(() => {
 Logo.displayName = "Logo";
 
 // Memoized WalletButton component to prevent re-renders
-const WalletButton = memo(() => <CustomWalletButton />);
+const WalletButton = memo(() => <CustomWalletButton showIcon={true} />);
 
 WalletButton.displayName = "WalletButton";
 
@@ -92,7 +92,7 @@ const Navbar = () => {
           ref={containerRef}
           className="glass rounded- px- md:px-8 py-4 relative"
         >
-          <div className="max-w-6xl mx-auto w-full flex items-center justify-between">
+          <div className="max-w-6xl mx-auto w-full flex items-center justify-between lg:pl-0 pl-4">
           {/* Logo */}
           <Logo />
 
@@ -250,7 +250,8 @@ const Navbar = () => {
                         Existing Fraction
                       </span>
                     </Link>
-                    <CustomWalletButton buttonClassName="!glass-button !flex !items-center !justify-center !gap-2 !px-4 !py-2 !rounded-full" variant="mobile" />
+                    <CustomWalletButton 
+                    showIcon={true} buttonClassName="!glass-button !flex !items-center !justify-center !gap-2 !px-4 !py-2 !rounded-full text-white" variant="mobile" />
                   </>
                 )}
               </div>

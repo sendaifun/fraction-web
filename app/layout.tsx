@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   authors: [{ name: appName, url: appUrl }],
   description: description,
   icons: {
-    icon: "/assets/logos/fraction.svg",
+    icon: "/assets/logos/sendai.svg",
     shortcut: "/assets/logos/fraction.svg",
     apple: "/assets/logos/fraction.svg",
   },

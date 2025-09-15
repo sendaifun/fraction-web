@@ -1,6 +1,6 @@
 "use client";
 
-import { botWallet, connection } from "@/app/lib/constants";
+import { botWallet, connection } from "../lib/solana";
 import { useWallet } from "@jup-ag/wallet-adapter";
 import { CustomWalletButton } from "./wallet/CustomWalletButton";
 import {
@@ -15,51 +15,8 @@ import { fraction } from "../lib/fractionsdk";
 import Input from "./common/Input";
 import SectionHeader from "./common/SectionHeader";
 import Tooltip from "./common/Tooltip";
-
-// LocalStorage keys
-const STORAGE_KEYS = {
-  RECIPIENTS: "fraction-recipients",
-  PERCENTAGES: "fraction-percentages",
-  FRACTION_NAME: "fraction-name",
-};
-
-// Helper functions for localStorage - for storing the form data on refresh
-const saveToStorage = (key: string, value: any) => {
-  if (typeof window !== "undefined") {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.warn("Failed to save to localStorage:", error);
-    }
-  }
-};
-
-const loadFromStorage = (key: string, defaultValue: any) => {
-  if (typeof window !== "undefined") {
-    try {
-      const stored = localStorage.getItem(key);
-      return stored ? JSON.parse(stored) : defaultValue;
-    } catch (error) {
-      console.warn("Failed to load from localStorage:", error);
-      return defaultValue;
-    }
-  }
-  return defaultValue;
-};
-
-// Function to get dynamic positioning for the Fraction Address box
-const getFractionBoxPosition = (numRecipients: number) => {
-  switch (numRecipients) {
-    case 2:
-      return "top-14"; // top-14 for 2 recipients
-    case 3:
-      return "top-22"; // top-22 for 3 recipients
-    case 4:
-      return "top-28"; // top-28 for 4 recipients
-    default: // 5 or more recipients
-      return "top-36"; // top-36 for 5+ recipients
-  }
-};
+import { isValidPublicKey } from "../lib/solana";
+import { STORAGE_KEYS, loadFromStorage, saveToStorage } from "../lib/localstorage";
 
 // Configuration for the DynamicConnector SVG.
 // This object centralizes all the magic numbers and settings for easy customization.
@@ -67,27 +24,32 @@ const getConnectorConfig = (numRecipients: number) => {
   let connectorStartY;
   let firstRecipientY;
   let recipientSpacing;
+  let fractionBoxPosition;
 
   switch (numRecipients) {
     case 2:
       connectorStartY = 61; // 56 for 2 recipients
       firstRecipientY = 28; // 28 for 2 recipients
       recipientSpacing = 66; // Default spacing
+      fractionBoxPosition = "top-14"; // top-14 for 2 recipients
       break;
     case 3:
       connectorStartY = 106; // 72 for 3 recipients
       firstRecipientY = 40; // 40 for 3 recipients
       recipientSpacing = 66; // Default spacing
+      fractionBoxPosition = "top-22"; // top-22 for 3 recipients
       break;
     case 4:
       connectorStartY = 165; // 112 for 4 recipients
       firstRecipientY = 68; // 68 for 4 recipients
       recipientSpacing = 65; // 65 for 4 recipients
+      fractionBoxPosition = "top-28"; // top-28 for 4 recipients
       break;
     default: // 5 or more recipients
       connectorStartY = 200; // 112 for 5+ recipients
       firstRecipientY = 68; // 68 for 5+ recipients
       recipientSpacing = 66; // 66 for 5+ recipients
+      fractionBoxPosition = "top-36"; // top-36 for 5+ recipients
       break;
   }
 
@@ -110,6 +72,7 @@ const getConnectorConfig = (numRecipients: number) => {
     shortConnectorStartX: 230,
     // The horizontal position where the short connector line ends, connecting to the input field.
     shortConnectorEndX: 273,
+    fractionBoxPosition,
   };
 };
 
@@ -267,17 +230,6 @@ const DynamicConnector = ({
       <circle cx={CONNECTOR_CONFIG.centerX} cy={middleY} r="4" fill="#0B78FD" />
     </svg>
   );
-};
-
-// Helper function to validate Solana public key
-const isValidPublicKey = (address: string): boolean => {
-  if (!address.trim()) return true; // Allow empty addresses
-  try {
-    new PublicKey(address.trim());
-    return true;
-  } catch {
-    return false;
-  }
 };
 
 const Split = () => {
@@ -566,7 +518,7 @@ const Split = () => {
               </Tooltip>
             </div>
             <div
-              className={`w-fit absolute ${getFractionBoxPosition(recipients.length)} left-36 px-6 py-4 text-white rounded-lg shadow-lg border-2 mb-8`}
+              className={`w-fit absolute ${getConnectorConfig(recipients.length)?.fractionBoxPosition} left-36 px-6 py-4 text-white rounded-lg shadow-lg border-2 mb-8`}
               style={{ background: "#05162A", borderColor: "#0B78FD" }}
             >
               <div className="font-polysans font-semibold text-lg flex items-center gap-2">

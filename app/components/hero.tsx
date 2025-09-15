@@ -102,7 +102,7 @@ const Hero = () => {
           animationData={heroAnimation}
           loop={true}
           autoplay={true}
-          className="w-full h-auto md:mx-16"
+          className="max-w-7xl h-auto md:mx-16"
         />
       </motion.div>
     </>

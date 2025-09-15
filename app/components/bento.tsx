@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
-import { STROKE_GRAY_1 } from "@/app/lib/constants";
+import { STROKE_GRAY_1 } from "../lib/constants";
 
 const Bento = () => {
   return (
@@ -28,7 +28,7 @@ const Bento = () => {
             style={{
               borderColor: STROKE_GRAY_1,
               borderWidth: "0.1px",
-              backgroundImage: "url('/assets/bgs/cardbgpattern.svg')",
+              backgroundImage: "url('/assets/bento/cardbg.svg')",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
               backgroundSize: "cover",
@@ -108,7 +108,7 @@ const Bento = () => {
             style={{
               borderColor: STROKE_GRAY_1,
               borderWidth: "0.1px",
-              backgroundImage: "url('/assets/bgs/cardbgpattern.svg')",
+              backgroundImage: "url('/assets/bento/cardbg.svg')",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
               backgroundSize: "cover",
@@ -137,7 +137,7 @@ const Bento = () => {
             className="flex justify-center items-center border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.4] relative"
             style={{
               borderColor: STROKE_GRAY_1,
-              backgroundImage: "url('/assets/bgs/cardbgpattern.svg')",
+              backgroundImage: "url('/assets/bento/cardbg.svg')",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
               backgroundSize: "cover",

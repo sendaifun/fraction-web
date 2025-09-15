@@ -3,9 +3,9 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 
-export default function AnimatedBackground() {
+export default function AnimatedBackground({ isSticky }: { isSticky: boolean }) {
   return (
-    <div className="fixed -top-72 left-0 w-full h-screen pointer-events-none z-0">
+    <div className={`${isSticky ? "fixed" : "absolute"} -top-72 left-0 w-full h-screen pointer-events-none z-0`}>
       {/* Stars Background */}
       <motion.div
         className="absolute top-0 left-0 w-full h-full opacity-60"

@@ -27,5 +27,5 @@ export default function TopBackground() {
     );
   }
 
-  return <AnimatedBackground />;
+  return <AnimatedBackground isSticky={false} />;
 }

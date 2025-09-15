@@ -8,11 +8,13 @@ import Image from "next/image";
 
 interface CustomWalletButtonProps {
   buttonClassName?: string;
+  showIcon?: boolean;
   variant?: "default" | "mobile";
 }
 
 export const CustomWalletButton = ({
   buttonClassName,
+  showIcon,
   variant = "default",
 }: CustomWalletButtonProps) => {
   const { wallets, connected } = useWallet();
@@ -38,6 +40,7 @@ export const CustomWalletButton = ({
     // Check periodically in case wallets get installed
     const interval = setInterval(checkWallets, 2000);
 
+    console.log("wallets", wallets);
     return () => clearInterval(interval);
   }, [wallets]);
 
@@ -62,12 +65,14 @@ export const CustomWalletButton = ({
       >
         <Dialog.Trigger asChild>
           <button className={finalClassName} type="button">
+          {showIcon && (
             <Image
               src="/assets/icons/wallet.svg"
               alt="Wallet"
-              width={16}
-              height={16}
-            />
+                width={16}
+                height={16}
+              />
+            )}
             Connect Wallet
           </button>
         </Dialog.Trigger>

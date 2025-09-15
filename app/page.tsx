@@ -4,13 +4,13 @@ import Bento from "./components/bento";
 import Cards from "./components/cards";
 import Faqs from "./components/faqs";
 import Navbar from "./components/navbar";
-import ScrollAnimatedBg from "./components/common/ScrollAnimatedBg";
+import AnimatedBackground from "./components/common/AnimatedBackground";
 
 export default function Home() {
   return (
     <>
       <div className="w-full h-full flex flex-col mx-auto px-2 sm:px-6 relative">
-        <ScrollAnimatedBg />
+        <AnimatedBackground isSticky={false} />
         <Navbar />
         <div className="mt-32 lg:mt-36 relative z-10">
           <Hero />
