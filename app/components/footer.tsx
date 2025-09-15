@@ -22,8 +22,8 @@ export default function Footer() {
         <p
           className={`text-[#B7CCF1]/40 text-sm leading-relaxed text-left`}
         >
-          SendAI Fraction is just a visual interface on Fraction with all
-          lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          This is just a visual interface for the Fraction protocol.
+          SendAI Inc. does not have any liability for any losses or damages that may occur from using the Fraction protocol.
         </p>
       </motion.div>
 
