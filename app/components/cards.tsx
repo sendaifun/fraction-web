@@ -47,6 +47,7 @@ const Cards = () => {
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           viewport={{ once: true, margin: "-50px" }}
         >
+          <div className="text-[#4E88F0] text-sm font-polysans mb-2 flex justify-center items-center">Purpose</div>
           <SectionHeader
             title="Built for agentic workflows and consumer apps"
             subtitle="Real-world workflows developers can launch in minutes."

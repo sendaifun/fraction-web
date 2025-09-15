@@ -46,6 +46,20 @@ const loadFromStorage = (key: string, defaultValue: any) => {
   return defaultValue;
 };
 
+// Function to get dynamic positioning for the Fraction Address box
+const getFractionBoxPosition = (numRecipients: number) => {
+  switch (numRecipients) {
+    case 2:
+      return "top-14"; // top-14 for 2 recipients
+    case 3:
+      return "top-22"; // top-22 for 3 recipients
+    case 4:
+      return "top-28"; // top-28 for 4 recipients
+    default: // 5 or more recipients
+      return "top-36"; // top-36 for 5+ recipients
+  }
+};
+
 // Configuration for the DynamicConnector SVG.
 // This object centralizes all the magic numbers and settings for easy customization.
 const getConnectorConfig = (numRecipients: number) => {
@@ -55,22 +69,22 @@ const getConnectorConfig = (numRecipients: number) => {
 
   switch (numRecipients) {
     case 2:
-      connectorStartY = 56; // 56 for 2 recipients
+      connectorStartY = 61; // 56 for 2 recipients
       firstRecipientY = 28; // 28 for 2 recipients
       recipientSpacing = 66; // Default spacing
       break;
     case 3:
-      connectorStartY = 72; // 72 for 3 recipients
+      connectorStartY = 106; // 72 for 3 recipients
       firstRecipientY = 40; // 40 for 3 recipients
       recipientSpacing = 66; // Default spacing
       break;
     case 4:
-      connectorStartY = 112; // 112 for 4 recipients
+      connectorStartY = 165; // 112 for 4 recipients
       firstRecipientY = 68; // 68 for 4 recipients
       recipientSpacing = 65; // 65 for 4 recipients
       break;
     default: // 5 or more recipients
-      connectorStartY = 112; // 112 for 5+ recipients
+      connectorStartY = 200; // 112 for 5+ recipients
       firstRecipientY = 68; // 68 for 5+ recipients
       recipientSpacing = 66; // 66 for 5+ recipients
       break;
@@ -551,7 +565,7 @@ const Split = () => {
               </Tooltip>
             </div>
             <div
-              className="w-fit absolute top-16 left-36 px-6 py-4 text-white rounded-lg shadow-lg border-2 mb-8"
+              className={`w-fit absolute ${getFractionBoxPosition(recipients.length)} left-36 px-6 py-4 text-white rounded-lg shadow-lg border-2 mb-8`}
               style={{ background: "#05162A", borderColor: "#0B78FD" }}
             >
               <div className="font-polysans font-semibold text-lg flex items-center gap-2">
@@ -602,7 +616,10 @@ const Split = () => {
                     onChange={(value) => updatePercentage(index, value)}
                     type="text"
                   />
-                  <div className="flex items-center" style={{ marginTop: index === 0 ? '40px' : '16px' }}>
+                  <div
+                    className="flex items-center"
+                    style={{ marginTop: index === 0 ? "40px" : "16px" }}
+                  >
                     <button
                       onClick={() => removeRecipient(index)}
                       className={`cursor-pointer w-4 h-4 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all duration-200 ${

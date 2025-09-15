@@ -34,30 +34,38 @@ const WalletButton = memo(() => <UnifiedWalletButton />);
 WalletButton.displayName = "WalletButton";
 
 // Memoized Navigation Links component
-const NavigationLinks = memo(({ pathname }: { pathname: string }) => (
-  <div className="hidden md:flex items-center gap-6">
-    <Link
-      href="/create"
-      className={`text-sm font-polysans font-medium transition-colors duration-200 ${
-        pathname === "/create"
-          ? "text-[#0B78FD]"
-          : "text-white/80 hover:text-white"
-      }`}
-    >
-      Create Fraction
-    </Link>
-    <Link
-      href="/list"
-      className={`text-sm font-polysans font-medium transition-colors duration-200 ${
-        pathname === "/list"
-          ? "text-[#0B78FD]"
-          : "text-white/80 hover:text-white"
-      }`}
-    >
-      Existing Fraction
-    </Link>
-  </div>
-));
+const NavigationLinks = memo(({ pathname }: { pathname: string }) => {
+  // Homepage - no navigation links in center
+  if (pathname === "/") {
+    return null;
+  }
+
+  // Other routes navigation
+  return (
+    <div className="hidden md:flex items-center gap-6">
+      <Link
+        href="/create"
+        className={`text-sm font-polysans font-medium transition-colors duration-200 ${
+          pathname === "/create"
+            ? "text-[#0B78FD]"
+            : "text-white/80 hover:text-white"
+        }`}
+      >
+        Create Fraction
+      </Link>
+      <Link
+        href="/list"
+        className={`text-sm font-polysans font-medium transition-colors duration-200 ${
+          pathname === "/list"
+            ? "text-[#0B78FD]"
+            : "text-white/80 hover:text-white"
+        }`}
+      >
+        Existing Fraction
+      </Link>
+    </div>
+  );
+});
 
 NavigationLinks.displayName = "NavigationLinks";
 
@@ -79,11 +87,12 @@ const Navbar = () => {
   // Memoized Navbar content component to avoid unnecessary re-renders
   const NavbarContent = useMemo(
     () => (
-      <div className="max-w-7xl mx-auto">
+      <div className="w-full">
         <div
           ref={containerRef}
-          className="glass rounded-full px-4 md:px-8 py-3.5 flex items-center justify-between relative"
+          className="glass rounded- px- md:px-8 py-4 relative"
         >
+          <div className="max-w-6xl mx-auto w-full flex items-center justify-between">
           {/* Logo */}
           <Logo />
 
@@ -92,7 +101,38 @@ const Navbar = () => {
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <WalletButton />
+            {pathname === "/" ? (
+              <>
+                <Link
+                  href="#"
+                  className="glass-button px-4 py-2 rounded-full text-sm font-polysans font-medium text-white/80 hover:text-white transition-colors duration-200 flex items-center gap-2"
+                >
+                  View Docs
+                  <Image
+                    src="/assets/icons/uprightarrow.svg"
+                    alt="External link"
+                    width={10}
+                    height={11}
+                    className="w-2.5 h-auto"
+                  />
+                </Link>
+                <Link
+                  href="/create"
+                  className="glass-button px-4 py-2 rounded-full text-sm font-polysans font-medium text-white/80 hover:text-white transition-colors duration-200 flex items-center gap-2"
+                >
+                  Fraction App
+                  <Image
+                    src="/assets/icons/rightchevron.svg"
+                    alt="Arrow right"
+                    width={6}
+                    height={10}
+                    className="w-1.5 h-auto"
+                  />
+                </Link>
+              </>
+            ) : (
+              <WalletButton />
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -141,41 +181,83 @@ const Navbar = () => {
               transition={{ duration: 0.2 }}
             >
               <div className="glass rounded-xl p-2 flex flex-col gap-2">
-                <Link
-                  href="/create"
-                  className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
-                    pathname === "/create" ? "bg-[#4E88F0]/20" : ""
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <span
-                    className={`font-medium text-sm ${
-                      pathname === "/create" ? "text-[#4E88F0]" : "text-white"
-                    }`}
-                  >
-                    Create Fraction
-                  </span>
-                </Link>
-                <Link
-                  href="/list"
-                  className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
-                    pathname === "/list" ? "bg-[#4E88F0]/20" : ""
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <span
-                    className={`font-medium text-sm ${
-                      pathname === "/list" ? "text-[#4E88F0]" : "text-white"
-                    }`}
-                  >
-                    Existing Fraction
-                  </span>
-                </Link>
-                <UnifiedWalletButton buttonClassName="!glass-button !flex !items-center !justify-center !gap-2 !px-4 !py-2 !rounded-full" />
+                {pathname === "/" ? (
+                  <>
+                    <Link
+                      href="#"
+                      className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span className="font-medium text-sm text-white">
+                        View Docs
+                      </span>
+                      <Image
+                        src="/assets/icons/uprightarrow.svg"
+                        alt="External link"
+                        width={10}
+                        height={11}
+                        className="w-2.5 h-auto"
+                      />
+                    </Link>
+                    <Link
+                      href="/list"
+                      className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span className="font-medium text-sm text-white">
+                        Fraction App
+                      </span>
+                      <Image
+                        src="/assets/icons/rightchevron.svg"
+                        alt="Arrow right"
+                        width={6}
+                        height={10}
+                        className="w-1.5 h-auto"
+                      />
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/create"
+                      className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
+                        pathname === "/create" ? "bg-[#4E88F0]/20" : ""
+                      }`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span
+                        className={`font-medium text-sm ${
+                          pathname === "/create"
+                            ? "text-[#4E88F0]"
+                            : "text-white"
+                        }`}
+                      >
+                        Create Fraction
+                      </span>
+                    </Link>
+                    <Link
+                      href="/list"
+                      className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
+                        pathname === "/list" ? "bg-[#4E88F0]/20" : ""
+                      }`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span
+                        className={`font-medium text-sm ${
+                          pathname === "/list" ? "text-[#4E88F0]" : "text-white"
+                        }`}
+                      >
+                        Existing Fraction
+                      </span>
+                    </Link>
+                    <UnifiedWalletButton buttonClassName="!glass-button !flex !items-center !justify-center !gap-2 !px-4 !py-2 !rounded-full" />
+                  </>
+                )}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
+        </div>
       </div>
     ),
     [pathname, isMenuOpen, containerRef]
@@ -186,7 +268,7 @@ const Navbar = () => {
       initial={shouldAnimate ? { opacity: 0, y: -20 } : { opacity: 1, y: 0 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: shouldAnimate ? 0.4 : 0 }}
-      className="fixed top-0 left-0 right-0 z-50 px-6 py-4"
+      className="fixed top-0 left-0 right-0 z-50 px- py- w-full"
     >
       {NavbarContent}
     </motion.nav>

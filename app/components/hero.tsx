@@ -24,13 +24,20 @@ const Hero = () => {
             height={100}
             className="w-88 h-6 md:h-8"
           />
-          <Image
-            src="/assets/abstract/herobadge2.svg"
-            alt="SendAI Badge 2"
-            width={100}
-            height={100}
-            className="w-64 h-6 md:h-8 -mt-10 bg-blur-100 rounded-full"
-          />
+          <div
+            className="rounded-full p-[1px] -mt-8 md:-mt-10 relative"
+            style={{
+              background: "linear-gradient(to bottom, rgba(43, 107, 255, 0.2), rgba(43, 107, 255, 0))",
+            }}
+          >
+            <div className="rounded-full bg-white/4 backdrop-blur-[24px] px-4 py-1">
+              <div 
+                className="md:text-md text-xs font-polysans text-nowrap bg-gradient-to-b from-white/100 to-white/64 bg-clip-text text-transparent"
+              >
+                SendAI Product
+              </div>
+            </div>
+          </div>
         </div>
         <motion.div
           className="hidden sm:block"
