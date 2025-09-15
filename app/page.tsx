@@ -9,14 +9,16 @@ import AnimatedBackground from "./components/common/AnimatedBackground";
 export default function Home() {
   return (
     <>
-      <div className="w-full h-full flex flex-col mx-auto px-2 sm:px-6 relative">
+      <div className="w-full h-full flex flex-col gap-16 mx-auto px-2 sm:px-6 relative">
         <AnimatedBackground isSticky={false} />
         <Navbar />
         <div className="mt-32 lg:mt-36 relative z-10">
           <Hero />
           <Bento />
 
-          <Cards />
+          <div className="my-32">
+            <Cards />
+          </div>
           <Faqs />
           <div
             className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-3/4 w-[400px] h-[200px] bg-[#1355A6]/50 rounded-full blur-[224px]"

@@ -99,7 +99,7 @@ body, html {
   }
   
   .glass-button {
-    @apply rounded-xl border border-white/10 bg-white/4 backdrop-blur-md;
+    @apply rounded-xl border border-white/10 bg-white/2 backdrop-blur-md;
     transition: all 0.1s ease;
   }
 

@@ -68,7 +68,7 @@ const Input = ({
           value={currentValue}
           onClick={onClick}
           onChange={(e) => handleChange(e.target.value)}
-          className={`w-full py-3 pr-12 rounded-lg bg-[#0B78FD1A] border transition-all duration-200 text-white placeholder-gray-400 font-polysans focus:outline-none ${
+          className={`w-full py-3 pr-8 rounded-lg bg-[#0B78FD1A] border transition-all duration-200 text-white placeholder-gray-400 font-polysans focus:outline-none ${
             error
               ? "border-red-500 focus:ring-2 focus:ring-red-500/20"
               : "border-white/[0.04] focus:ring-2 focus:ring-[#0B78FD]/20"

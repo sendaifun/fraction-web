@@ -54,12 +54,12 @@ const Cards = () => {
           />
         </motion.div>
 
-        <div className="flex flex-col gap-8 m-2 lg:flex-row">
+        <div className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-8 m-2 lg:flex-row">
           {cards.map((card, index) => (
             <motion.div
               key={index}
               style={{ borderWidth: "0.5px" }}
-              className="bg-black/20 border border-[#585858] rounded-lg p-6 hover:border-[#585858] transition-colors duration-300"
+              className="flex flex-col bg-[#3F3F3F]/10 backdrop:blur-xl border border-[#242424] rounded-lg p-6 hover:border-[#242424]/60 transition-colors duration-300 w-64 h-fit backdrop-blur-xl"
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ 

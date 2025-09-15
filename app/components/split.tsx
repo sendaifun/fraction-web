@@ -258,18 +258,24 @@ const Split = () => {
     setIsHydrated(true);
   }, []); // Only run on mount
 
-  // Save to localStorage whenever state changes
+  // Save to localStorage whenever state changes (but only after hydration)
   useEffect(() => {
-    saveToStorage(STORAGE_KEYS.RECIPIENTS, recipients);
-  }, [recipients]);
+    if (isHydrated) {
+      saveToStorage(STORAGE_KEYS.RECIPIENTS, recipients);
+    }
+  }, [recipients, isHydrated]);
 
   useEffect(() => {
-    saveToStorage(STORAGE_KEYS.PERCENTAGES, percentages);
-  }, [percentages]);
+    if (isHydrated) {
+      saveToStorage(STORAGE_KEYS.PERCENTAGES, percentages);
+    }
+  }, [percentages, isHydrated]);
 
   useEffect(() => {
-    saveToStorage(STORAGE_KEYS.FRACTION_NAME, fractionName);
-  }, [fractionName]);
+    if (isHydrated) {
+      saveToStorage(STORAGE_KEYS.FRACTION_NAME, fractionName);
+    }
+  }, [fractionName, isHydrated]);
 
   // Function to clear all stored data (just in case)
   // const clearStoredData = () => {
@@ -287,7 +293,14 @@ const Split = () => {
   const addRecipient = () => {
     if (recipients.length < 5) {
       const newRecipients = [...recipients, ""];
-      const newPercentages = [...percentages, ""];
+
+      const newPercentages = [...percentages];
+      const lastPercentage = parseFloat(newPercentages[newPercentages.length - 1] || "0");
+      const half = lastPercentage / 2;
+      const halfStr = parseFloat(half.toFixed(2)).toString();
+      newPercentages[newPercentages.length - 1] = halfStr;
+      newPercentages.push(halfStr);
+      
       const newErrors = [...recipientErrors, false];
       setRecipients(newRecipients);
       setPercentages(newPercentages);
@@ -303,9 +316,19 @@ const Split = () => {
 
   const removeRecipient = (index: number) => {
     if (recipients.length > 2) {
+      const removedPercentage = parseFloat(percentages[index]) || 0;
       const updatedRecipients = recipients.filter((_, i) => i !== index);
       const updatedPercentages = percentages.filter((_, i) => i !== index);
       const updatedErrors = recipientErrors.filter((_, i) => i !== index);
+
+      if (updatedPercentages.length > 0) {
+        const lastIndex = updatedPercentages.length - 1;
+        const lastPercentage = parseFloat(updatedPercentages[lastIndex]) || 0;
+        updatedPercentages[lastIndex] = parseFloat(
+          (lastPercentage + removedPercentage).toFixed(2)
+        ).toString();
+      }
+
       setRecipients(updatedRecipients);
       setPercentages(updatedPercentages);
       setRecipientErrors(updatedErrors);
@@ -334,6 +357,18 @@ const Split = () => {
     const numericValue = value.replace(/[^0-9.]/g, "");
     const updatedPercentages = [...percentages];
     updatedPercentages[index] = numericValue;
+
+    // Prefill the last box if we're not editing it
+    if (index < updatedPercentages.length - 1) {
+      const sumOfOthers = updatedPercentages
+        .slice(0, updatedPercentages.length - 1)
+        .reduce((sum, p) => sum + (parseFloat(p) || 0), 0);
+
+      const remainder = 100 - sumOfOthers;
+      updatedPercentages[updatedPercentages.length - 1] =
+        remainder >= 0 ? parseFloat(remainder.toFixed(2)).toString() : "0";
+    }
+
     setPercentages(updatedPercentages);
     console.log(`Percentage ${index + 1}:`, numericValue);
     console.log("All percentages:", updatedPercentages);
@@ -498,6 +533,23 @@ const Split = () => {
       toast.error("Failed to create fraction. Please try again.");
     }
   };
+
+  // Don't render until hydrated to prevent showing empty values
+  if (!isHydrated) {
+    return (
+      <div className="max-w-6xl mx-auto">
+        <SectionHeader
+          title="Create your own Fraction"
+          subtitle="Fraction is a Solana program that splits all incoming SPL tokens (eg. USDC) among the recipients according to the allocated % shares."
+        />
+        <div className="flex w-full mt-16 gap-8 relative bg-black/10 border border-white/10 rounded-xl p-8">
+          <div className="flex justify-center items-center w-full h-64">
+            <div className="text-white/60">Loading...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

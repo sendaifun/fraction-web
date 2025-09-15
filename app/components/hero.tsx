@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Lottie from "lottie-react";
 import { motion } from "motion/react";
-import heroAnimation from "../../public/animations/hero2.json";
+import heroAnimation from "../../public/animations/hero.json";
 
 const Hero = () => {
   return (

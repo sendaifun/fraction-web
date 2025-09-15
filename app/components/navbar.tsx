@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { memo, useMemo, useRef, useState } from "react";
+import { useWallet } from "@jup-ag/wallet-adapter";
 import { useMotionTracking } from "../hooks/useMotionTracking";
 import { CustomWalletButton } from "./wallet/CustomWalletButton";
 
@@ -34,9 +35,14 @@ const WalletButton = memo(() => <CustomWalletButton showIcon={true} />);
 WalletButton.displayName = "WalletButton";
 
 // Memoized Navigation Links component
-const NavigationLinks = memo(({ pathname }: { pathname: string }) => {
+const NavigationLinks = memo(({ pathname, connected }: { pathname: string; connected: boolean }) => {
   // Homepage - no navigation links in center
   if (pathname === "/") {
+    return null;
+  }
+
+  // Only show navigation links if wallet is connected
+  if (!connected) {
     return null;
   }
 
@@ -74,6 +80,7 @@ const Navbar = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { connected } = useWallet();
 
   // Determine animation state once and never change it
   const [shouldAnimate] = useState(() => {
@@ -92,15 +99,19 @@ const Navbar = () => {
           ref={containerRef}
           className="glass rounded- px- md:px-8 py-4 relative"
         >
-          <div className="max-w-6xl mx-auto w-full flex items-center justify-between lg:pl-0 pl-4">
-          {/* Logo */}
-          <Logo />
+          <div className="max-w-6xl mx-auto w-full grid grid-cols-3 items-center lg:pl-0 pl-4">
+          {/* Logo - Left */}
+          <div className="flex justify-start">
+            <Logo />
+          </div>
 
-          {/* Navigation Links */}
-          <NavigationLinks pathname={pathname} />
+          {/* Navigation Links - Center */}
+          <div className="flex justify-center">
+            <NavigationLinks pathname={pathname} connected={connected} />
+          </div>
 
-          {/* Desktop Buttons */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Desktop Buttons - Right */}
+          <div className="hidden md:flex items-center gap-3 justify-end">
             {pathname === "/" ? (
               <>
                 <Link
@@ -136,7 +147,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex justify-end">
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2 text-white"
@@ -188,7 +199,7 @@ const Navbar = () => {
                       className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <span className="font-medium text-sm text-white">
+                      <span className="font-medium text-sm text-white whitespace-nowrap">
                         View Docs
                       </span>
                       <Image
@@ -204,7 +215,7 @@ const Navbar = () => {
                       className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <span className="font-medium text-sm text-white">
+                      <span className="font-medium text-sm text-white whitespace-nowrap">
                         Fraction App
                       </span>
                       <Image
@@ -218,38 +229,42 @@ const Navbar = () => {
                   </>
                 ) : (
                   <>
-                    <Link
-                      href="/create"
-                      className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
-                        pathname === "/create" ? "bg-[#4E88F0]/20" : ""
-                      }`}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <span
-                        className={`font-medium text-sm ${
-                          pathname === "/create"
-                            ? "text-[#4E88F0]"
-                            : "text-white"
-                        }`}
-                      >
-                        Create Fraction
-                      </span>
-                    </Link>
-                    <Link
-                      href="/list"
-                      className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
-                        pathname === "/list" ? "bg-[#4E88F0]/20" : ""
-                      }`}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <span
-                        className={`font-medium text-sm ${
-                          pathname === "/list" ? "text-[#4E88F0]" : "text-white"
-                        }`}
-                      >
-                        Existing Fraction
-                      </span>
-                    </Link>
+                    {connected && (
+                      <>
+                        <Link
+                          href="/create"
+                          className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
+                            pathname === "/create" ? "bg-[#4E88F0]/20" : ""
+                          }`}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <span
+                            className={`font-medium text-sm ${
+                              pathname === "/create"
+                                ? "text-[#4E88F0]"
+                                : "text-white"
+                            }`}
+                          >
+                            Create Fraction
+                          </span>
+                        </Link>
+                        <Link
+                          href="/list"
+                          className={`glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full ${
+                            pathname === "/list" ? "bg-[#4E88F0]/20" : ""
+                          }`}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <span
+                            className={`font-medium text-sm ${
+                              pathname === "/list" ? "text-[#4E88F0]" : "text-white"
+                            }`}
+                          >
+                            Existing Fraction
+                          </span>
+                        </Link>
+                      </>
+                    )}
                     <CustomWalletButton 
                     showIcon={true} buttonClassName="!glass-button !flex !items-center !justify-center !gap-2 !px-4 !py-2 !rounded-full text-white" variant="mobile" />
                   </>
@@ -261,7 +276,7 @@ const Navbar = () => {
         </div>
       </div>
     ),
-    [pathname, isMenuOpen, containerRef]
+    [pathname, isMenuOpen, containerRef, connected]
   );
 
   return (

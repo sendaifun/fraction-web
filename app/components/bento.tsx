@@ -15,7 +15,9 @@ const Bento = () => {
     >
       <motion.div
         className="border"
-        style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px" }}
+        style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px", 
+            //  borderTop: "none", borderLeft: "none", borderBottom: "none", borderRight: "none", 
+        }}
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -24,8 +26,11 @@ const Bento = () => {
         {/* Row 1: Image Left, Text Right */}
         <div className="flex flex-col lg:flex-row">
           <div
-            className="flex justify-center items-center border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.4] relative"
+            className="flex justify-center items-center border-[0.1px] p-6 lg:flex-[0.4] relative aspect-square"
             style={{
+              borderTop: "none",
+              borderLeft: "none",
+              borderBottom: "none",
               borderColor: STROKE_GRAY_1,
               borderWidth: "0.1px",
               backgroundImage: "url('/assets/bento/cardbg.svg')",
@@ -50,10 +55,14 @@ const Bento = () => {
             </motion.div>
           </div>
           <div
-            className="flex flex-col justify-end space-y-4 border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.6]"
-            style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px" }}
+            className="flex flex-col justify-end space-y-4 border-[0.1px] px-16 py-8 min-h-[300px] lg:flex-[0.6]"
+            style={{
+              borderColor: STROKE_GRAY_1,
+              borderWidth: "0.1px",
+              border: "none",
+            }}
           >
-            <motion.h3 
+            <motion.h3
               className="text-2xl lg:text-3xl font-bold text-white"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -62,7 +71,7 @@ const Bento = () => {
             >
               Deposit and split transactions
             </motion.h3>
-            <motion.p 
+            <motion.p
               className="text-gray-300 text-lg leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -79,10 +88,16 @@ const Bento = () => {
         {/* Row 2: Text Left, Image Right */}
         <div className="flex flex-col lg:flex-row">
           <div
-            className="flex flex-col justify-end space-y-4 border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.6] order-2 lg:order-1"
-            style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px" }}
+            className="flex flex-col justify-end space-y-4 border-[0.1px] px-16 py-8 min-h-[300px] lg:flex-[0.6] order-2 lg:order-1"
+            style={{
+              borderColor: STROKE_GRAY_1,
+              borderWidth: "0.1px",
+              borderLeft: "none",
+              borderRight: "none",
+              borderBottom: "none",
+            }}
           >
-            <motion.h3 
+            <motion.h3
               className="text-2xl lg:text-3xl font-bold text-white"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -91,7 +106,7 @@ const Bento = () => {
             >
               Integrate in &lt;10 mins
             </motion.h3>
-            <motion.p 
+            <motion.p
               className="text-gray-300 text-lg leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -104,10 +119,11 @@ const Bento = () => {
             </motion.p>
           </div>
           <div
-            className="flex justify-center items-center border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.4] order-1 lg:order-2 relative"
+            className="flex justify-center items-center border-[0.1px] p-6 lg:flex-[0.4] order-1 lg:order-2 relative aspect-square"
             style={{
               borderColor: STROKE_GRAY_1,
               borderWidth: "0.1px",
+              borderTop: "none", borderLeft: "none", borderBottom: "none", borderRight: "none",
               backgroundImage: "url('/assets/bento/cardbg.svg')",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
@@ -129,13 +145,14 @@ const Bento = () => {
               />
             </motion.div>
           </div>
-            </div>
+        </div>
 
         {/* Row 3: Image Left, Text Right */}
         <div className="flex flex-col lg:flex-row">
           <div
-            className="flex justify-center items-center border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.4] relative"
+            className="flex justify-center items-center border-[0.1px] p-6 lg:flex-[0.4] relative aspect-square"
             style={{
+              borderTop: "none", borderLeft: "none", borderBottom: "none", borderRight: "none",
               borderColor: STROKE_GRAY_1,
               backgroundImage: "url('/assets/bento/cardbg.svg')",
               backgroundRepeat: "no-repeat",
@@ -159,10 +176,10 @@ const Bento = () => {
             </motion.div>
           </div>
           <div
-            className="flex flex-col justify-end space-y-4 border-[0.1px] p-6 min-h-[300px] flex-1 lg:flex-[0.6]"
-            style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px" }}
+            className="flex flex-col justify-end space-y-4 border-[0.1px] px-16 py-8 min-h-[300px] lg:flex-[0.6]"
+            style={{ borderColor: STROKE_GRAY_1, borderWidth: "0.1px", borderLeft: "none", borderBottom: "none", borderRight: "none" }}
           >
-            <motion.h3 
+            <motion.h3
               className="text-2xl lg:text-3xl font-bold text-white"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -171,7 +188,7 @@ const Bento = () => {
             >
               Trusted, Audited & open-source
             </motion.h3>
-            <motion.p 
+            <motion.p
               className="text-gray-300 text-lg leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
