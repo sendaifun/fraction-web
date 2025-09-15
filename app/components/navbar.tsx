@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRef, useState, useEffect, memo, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { useMotionTracking } from "../hooks/useMotionTracking";
-import { UnifiedWalletButton } from "@jup-ag/wallet-adapter";
+import { CustomWalletButton } from "./wallet/CustomWalletButton";
 
 // Static Logo component that never re-renders
 const Logo = memo(() => {
@@ -29,7 +29,7 @@ const Logo = memo(() => {
 Logo.displayName = "Logo";
 
 // Memoized WalletButton component to prevent re-renders
-const WalletButton = memo(() => <UnifiedWalletButton />);
+const WalletButton = memo(() => <CustomWalletButton />);
 
 WalletButton.displayName = "WalletButton";
 
@@ -250,7 +250,7 @@ const Navbar = () => {
                         Existing Fraction
                       </span>
                     </Link>
-                    <UnifiedWalletButton buttonClassName="!glass-button !flex !items-center !justify-center !gap-2 !px-4 !py-2 !rounded-full" />
+                    <CustomWalletButton buttonClassName="!glass-button !flex !items-center !justify-center !gap-2 !px-4 !py-2 !rounded-full" variant="mobile" />
                   </>
                 )}
               </div>

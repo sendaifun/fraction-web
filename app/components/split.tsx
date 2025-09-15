@@ -1,7 +1,8 @@
 "use client";
 
 import { botWallet, connection } from "@/app/lib/constants";
-import { UnifiedWalletButton, useWallet } from "@jup-ag/wallet-adapter";
+import { useWallet } from "@jup-ag/wallet-adapter";
+import { CustomWalletButton } from "./wallet/CustomWalletButton";
 import {
   PublicKey,
   SystemProgram,
@@ -699,7 +700,7 @@ const Split = () => {
               ) : (
                 <div className="flex gap-4 w-full">
                   <div className="flex-1">
-                    <UnifiedWalletButton buttonClassName="!w-full !px-4 !py-3 !rounded-lg !font-polysans !font-medium !transition-all !duration-200 !focus:outline-none !bg-[#4E88F0] !text-white hover:!bg-[#4E88F0]/90" />
+                    <CustomWalletButton buttonClassName="!w-full !px-4 !py-3 !rounded-lg !font-polysans !font-medium !transition-all !duration-200 !focus:outline-none !bg-[#4E88F0] !text-white hover:!bg-[#4E88F0]/90" />
                   </div>
                 </div>
               )}

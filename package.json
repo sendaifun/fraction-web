@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@jup-ag/wallet-adapter": "^0.2.3",
+    "@radix-ui/react-dialog": "^1.1.15",
     "@sendaifun/fraction": "^0.0.1",
     "@solana/wallet-adapter-base": "^0.9.27",
     "@solana/wallet-adapter-react": "^0.15.39",

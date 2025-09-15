@@ -7,7 +7,7 @@ import SectionHeader from "./common/SectionHeader";
 const Cards = () => {
   const cards = [
     {
-      icon: "/assets/icons/chart.svg",
+      icon: "/assets/icons/smile-face.svg",
       title: "Consumer",
       subtitle:
         "Power apps with subscriptions, payroll, and instant revenue splits.",
@@ -25,7 +25,7 @@ const Cards = () => {
         "Automate token sale proceeds, vesting schedules, and treasury allocations.",
     },
     {
-      icon: "/assets/icons/chart.svg",
+      icon: "/assets/icons/globe.svg",
       title: "Move Money",
       subtitle:
         "On-chain rails for instant payments, atomic settlements, and recurring flows.",
