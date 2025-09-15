@@ -131,7 +131,7 @@ const DynamicConnector = ({
       className="w-full h-auto"
       style={{ minHeight: "300px" }}
     >
-      {/* Main horizontal line from Fractions box to center */}
+      {/* Main horizontal line from Fraction box to center */}
       <path
         d={`M${CONNECTOR_CONFIG.connectorStartX} ${CONNECTOR_CONFIG.connectorStartY}L${CONNECTOR_CONFIG.centerX} ${middleY}`}
         stroke="#0B78FD"
@@ -531,12 +531,12 @@ const Split = () => {
     <>
       <div className="max-w-6xl mx-auto">
         <SectionHeader
-          title="Create your own Fractions"
+          title="Create your own Fraction"
           subtitle="Fraction is a Solana program that splits all incoming SPL tokens (eg. USDC) among the recipients according to the allocated % shares."
         />
 
         <div className="flex w-full mt-16 gap-8 relative bg-black/10 border border-white/10 rounded-xl p-8">
-          {/* Left Side - Fractions Source Box - Hidden on tablet and mobile */}
+          {/* Left Side - Fraction Source Box - Hidden on tablet and mobile */}
           <div className="relative w-1/2 hidden lg:flex flex-col items-left z-10 p-16">
             <div className="w-fit absolute top-0 left-36 px-0 py-0 text-white font-polysans font-medium flex items-center gap-2">
               <span>Fraction Address</span>

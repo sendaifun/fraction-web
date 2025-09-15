@@ -44,7 +44,7 @@ const NavigationLinks = memo(({ pathname }: { pathname: string }) => (
           : "text-white/80 hover:text-white"
       }`}
     >
-      Create Fractions
+      Create Fraction
     </Link>
     <Link
       href="/list"
@@ -54,7 +54,7 @@ const NavigationLinks = memo(({ pathname }: { pathname: string }) => (
           : "text-white/80 hover:text-white"
       }`}
     >
-      Existing Fractions
+      Existing Fraction
     </Link>
   </div>
 ));
@@ -153,7 +153,7 @@ const Navbar = () => {
                       pathname === "/create" ? "text-[#4E88F0]" : "text-white"
                     }`}
                   >
-                    Create Fractions
+                    Create Fraction
                   </span>
                 </Link>
                 <Link
@@ -168,7 +168,7 @@ const Navbar = () => {
                       pathname === "/list" ? "text-[#4E88F0]" : "text-white"
                     }`}
                   >
-                    Existing Fractions
+                    Existing Fraction
                   </span>
                 </Link>
                 <UnifiedWalletButton buttonClassName="!glass-button !flex !items-center !justify-center !gap-2 !px-4 !py-2 !rounded-full" />

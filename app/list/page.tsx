@@ -139,8 +139,8 @@ export default function ListPage() {
               <div className="w-full mb-8 px-4">
                 <Input
                   className="w-full"
-                  // label="Search Fractions"
-                  placeholder="Search your fractions.."
+                  // label="Search Fraction"
+                  placeholder="Search your fraction.."
                   value={searchQuery}
                   onChange={setSearchQuery}
                   icon="/assets/icons/search.svg"
@@ -201,7 +201,7 @@ export default function ListPage() {
                 {filteredFractions.length === 0 && (
                   <div className="text-center py-12">
                     <div className="text-gray-400 font-polysans text-lg mb-2">
-                      No fractions found
+                      No fraction found
                     </div>
                     <div className="text-gray-500 font-polysans">
                       {searchQuery

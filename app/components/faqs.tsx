@@ -16,7 +16,7 @@ const faqData: FAQItem[] = [
       "We're working on providing you with the most accurate and detailed information. Please check back soon as this section will be updated shortly with all the answers you need!",
   },
   {
-    question: "What are Fractions and how do they work?",
+    question: "What is Fraction and how do they work?",
     answer:
       "We're working on providing you with the most accurate and detailed information. Please check back soon as this section will be updated shortly with all the answers you need!",
   },
@@ -26,7 +26,7 @@ const faqData: FAQItem[] = [
       "We're working on providing you with the most accurate and detailed information. Please check back soon as this section will be updated shortly with all the answers you need!",
   },
   {
-    question: "Can I trade my fractions with other users?",
+    question: "Can I trade my fraction with other users?",
     answer:
       "We're working on providing you with the most accurate and detailed information. Please check back soon as this section will be updated shortly with all the answers you need!",
   },
@@ -129,7 +129,7 @@ const Faqs = () => {
         >
           <SectionHeader
             title="Frequently Asked Questions"
-            subtitle="Everything you need to know about Fractions"
+            subtitle="Everything you need to know about Fraction"
           />
         </motion.div>
         <div className="w-full max-w-7xl flex flex-col gap-4 cursor-pointer">

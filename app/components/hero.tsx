@@ -52,7 +52,7 @@ const Hero = () => {
           viewport={{ once: true }}
         >
           <div className="text-white text-5xl md:text-6xl font-polysans text-nowrap">
-            Fractions on{" "}
+            Fraction on{" "}
           </div>
           <Image
             src="/assets/logos/solana.svg"
@@ -70,7 +70,7 @@ const Hero = () => {
           </div>
           <div className="text-white text-4xl sm:hidden font-polysans text-nowrap">
             {" "}
-            into Fractions on{" "}
+            into Fraction on{" "}
           </div>
 
           <Image
