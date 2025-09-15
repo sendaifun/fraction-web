@@ -1,10 +1,10 @@
 "use client";
 
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState, useEffect, memo, useMemo } from "react";
 import { usePathname } from "next/navigation";
+import { memo, useMemo, useRef, useState } from "react";
 import { useMotionTracking } from "../hooks/useMotionTracking";
 import { CustomWalletButton } from "./wallet/CustomWalletButton";
 

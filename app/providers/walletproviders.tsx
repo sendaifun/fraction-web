@@ -10,9 +10,9 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
         autoConnect: true,
         env: "mainnet-beta",
         metadata: {
-          name: "UnifiedWallet",
-          description: "UnifiedWallet",
-          url: "https://jup.ag",
+          name: "Fraction",
+          description: "Fraction by SendAI",
+          url: "https://fraction.sendai.fun",
           iconUrls: ["https://jup.ag/favicon.ico"],
         },
         notificationCallback: {

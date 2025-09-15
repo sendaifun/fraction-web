@@ -128,7 +128,9 @@ export default function ListPage() {
 
             {/* Halo gradient overlay */}
             <div className="absolute inset-0 -left-120 overflow-hidden pointer-events-none z-10 flex items-center justify-center">
-              <img
+              <Image
+                width={2034}
+                height={1341}
                 src="/assets/bgs/halograd.svg"
                 alt=""
                 className="w-full h-auto opacity-60"

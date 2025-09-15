@@ -234,25 +234,28 @@ const DynamicConnector = ({
 
 const Split = () => {
   const { connected, wallet, publicKey } = useWallet();
-  const [recipients, setRecipients] = useState<string[]>(() =>
-    loadFromStorage(STORAGE_KEYS.RECIPIENTS, ["", ""])
-  );
-  const [percentages, setPercentages] = useState<string[]>(() =>
-    loadFromStorage(STORAGE_KEYS.PERCENTAGES, ["", ""])
-  );
-  const [fractionName, setFractionName] = useState<string>(() =>
-    loadFromStorage(STORAGE_KEYS.FRACTION_NAME, "")
-  );
-  const [recipientErrors, setRecipientErrors] = useState<boolean[]>(() =>
-    new Array(recipients.length).fill(false)
-  );
+  const [recipients, setRecipients] = useState<string[]>(["", ""]);
+  const [percentages, setPercentages] = useState<string[]>(["", ""]);
+  const [fractionName, setFractionName] = useState<string>("");
+  const [recipientErrors, setRecipientErrors] = useState<boolean[]>([false, false]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Initialize error states for existing recipients
+  // Load from localStorage after hydration - SSR
   useEffect(() => {
-    const errors = recipients.map(
-      (recipient) => recipient.trim() !== "" && !isValidPublicKey(recipient)
+    const storedRecipients = loadFromStorage(STORAGE_KEYS.RECIPIENTS, ["", ""]);
+    const storedPercentages = loadFromStorage(STORAGE_KEYS.PERCENTAGES, ["", ""]);
+    const storedFractionName = loadFromStorage(STORAGE_KEYS.FRACTION_NAME, "");
+    
+    setRecipients(storedRecipients);
+    setPercentages(storedPercentages);
+    setFractionName(storedFractionName);
+    
+    // Initialize error states for loaded recipients
+    const errors = storedRecipients.map(
+      (recipient: string) => recipient.trim() !== "" && !isValidPublicKey(recipient)
     );
     setRecipientErrors(errors);
+    setIsHydrated(true);
   }, []); // Only run on mount
 
   // Save to localStorage whenever state changes
@@ -268,17 +271,18 @@ const Split = () => {
     saveToStorage(STORAGE_KEYS.FRACTION_NAME, fractionName);
   }, [fractionName]);
 
-  // Function to clear all stored data
-  const clearStoredData = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem(STORAGE_KEYS.RECIPIENTS);
-      localStorage.removeItem(STORAGE_KEYS.PERCENTAGES);
-      localStorage.removeItem(STORAGE_KEYS.FRACTION_NAME);
-    }
-    setRecipients(["", ""]);
-    setPercentages(["", ""]);
-    setFractionName("");
-  };
+  // Function to clear all stored data (just in case)
+  // const clearStoredData = () => {
+  //   if (typeof window !== "undefined") {
+  //     localStorage.removeItem(STORAGE_KEYS.RECIPIENTS);
+  //     localStorage.removeItem(STORAGE_KEYS.PERCENTAGES);
+  //     localStorage.removeItem(STORAGE_KEYS.FRACTION_NAME);
+  //   }
+  //   setRecipients(["", ""]);
+  //   setPercentages(["", ""]);
+  //   setFractionName("");
+  //   setRecipientErrors([false, false]);
+  // };
 
   const addRecipient = () => {
     if (recipients.length < 5) {
@@ -478,6 +482,7 @@ const Split = () => {
           setRecipients(["", ""]);
           setPercentages(["", ""]);
           setFractionName("");
+          setRecipientErrors([false, false]);
         } catch (signError) {
           console.error("Error signing or sending transaction:", signError);
           toast.dismiss(loadingToastId); // Dismiss specific loading toast

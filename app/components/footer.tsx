@@ -23,8 +23,7 @@ export default function Footer() {
           className={`text-[#B7CCF1]/40 text-sm leading-relaxed text-left`}
         >
           SendAI Fraction is just a visual interface on Fraction with all
-          non-custodial, transfer, and trading services powered by third party
-          services like Jupiter, Birdeye, Privy, and more.
+          lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </p>
       </motion.div>
 
