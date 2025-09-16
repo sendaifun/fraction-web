@@ -211,7 +211,7 @@ const Navbar = () => {
                       />
                     </Link>
                     <Link
-                      href="/list"
+                      href="/create"
                       className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full"
                       onClick={() => setIsMenuOpen(false)}
                     >

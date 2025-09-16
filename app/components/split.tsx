@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { fraction } from "../lib/fractionsdk";
 import Input from "./common/Input";
 import SectionHeader from "./common/SectionHeader";
@@ -36,18 +37,25 @@ const getConnectorConfig = (
   // Calculate how many recipients have errors to adjust spacing
   const errorCount = recipientErrors.filter(Boolean).length;
   // Each error message adds approximately 20px of height (text + margin)
-  const errorSpacingAdjustment = errorCount > 0 ? 12 : 0;
+
+  let errorSpacingAdjustment;
+  if (numRecipients === 3) {
+    errorSpacingAdjustment = errorCount > 0 ? 36 : 0;
+  } else {
+    errorSpacingAdjustment = errorCount > 0 ? 12 : 0;
+  }
+  // const errorSpacingAdjustmentcase3 = errorCount > 0 ? 32 : 0;
 
   switch (numRecipients) {
     case 2:
-      connectorStartY = 64 + errorSpacingAdjustment;
+      connectorStartY = 62 + errorSpacingAdjustment;
       firstRecipientY = 34;
       recipientSpacing = 56 + (recipientErrors[0] ? 1 : 0); // Adjust spacing for first recipient error
       fractionBoxPosition = errorCount > 0 ? "top-20" : "top-14";
       break;
     case 3:
-      connectorStartY = 130 + errorSpacingAdjustment;
-      firstRecipientY = 60;
+      connectorStartY = 116 + errorSpacingAdjustment;
+      firstRecipientY = 50 + (recipientErrors[1] ? 10 : 0);
       recipientSpacing = 66;
       fractionBoxPosition = errorCount > 0 ? "top-28" : "top-24";
       break;
@@ -252,6 +260,7 @@ const DynamicConnector = ({
 
 const Split = () => {
   const { connected, wallet, publicKey } = useWallet();
+  const router = useRouter();
   const [recipients, setRecipients] = useState<string[]>(["", ""]);
   const [percentages, setPercentages] = useState<string[]>(["", ""]);
   const [fractionName, setFractionName] = useState<string>("");
@@ -545,6 +554,9 @@ const Split = () => {
           setPercentages(["", ""]);
           setFractionName("");
           setRecipientErrors([false, false]);
+
+          // Redirect to /list page after successful completion
+          router.push("/list");
         } catch (signError) {
           console.error("Error signing or sending transaction:", signError);
           toast.dismiss(loadingToastId); // Dismiss specific loading toast

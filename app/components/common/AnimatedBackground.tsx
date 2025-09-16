@@ -28,7 +28,7 @@ export default function AnimatedBackground({ isSticky }: { isSticky: boolean }) 
 
       {/* Top Glare Overlay */}
       <motion.div
-        className="absolute top-0 left-0 w-full  opacity-80"
+        className="absolute top-0 left-0 w-full h-full md:h-max opacity-80"
         initial={{ opacity: 0, y: 20}}
         animate={{ opacity: 1 }}
         transition={{

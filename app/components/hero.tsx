@@ -17,18 +17,29 @@ const Hero = () => {
         viewport={{ once: true, margin: "-100px" }}
       >
         <div className="flex flex-col items-center gap-2 mb-4">
-          <Image
-            src="/assets/abstract/herobadge1.svg"
-            alt="SendAI Badge 1"
-            width={100}
-            height={100}
-            className="w-88 h-6 md:h-8"
-          />
-          <div
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 1.0, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-50px" }}
+          >
+            <Image
+              src="/assets/abstract/herobadge1.svg"
+              alt="SendAI Badge 1"
+              width={100}
+              height={100}
+              className="w-88 h-6 md:h-8"
+            />
+          </motion.div>
+          <motion.div
             className="rounded-full p-[1px] -mt-8 md:-mt-10 relative"
             style={{
               background: "linear-gradient(to bottom, rgba(43, 107, 255, 0.2), rgba(43, 107, 255, 0))",
             }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-50px" }}
           >
             <div className="rounded-full bg-white/4 backdrop-blur-[24px] px-4 py-1">
               <div 
@@ -37,7 +48,7 @@ const Hero = () => {
                 SendAI Product
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
         <motion.div
           className="hidden sm:block"

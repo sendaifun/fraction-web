@@ -44,7 +44,7 @@ const Bento = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
               viewport={{ once: true, margin: "-50px" }}
-              className="w-full max-w-md h-auto max-h-80 relative z-10"
+              className="w-full max-w-md h-auto max-h-80 relative z-10 flex justify-center items-center"
             >
               <Lottie
                 animationData={loopAnimation}
@@ -130,7 +130,7 @@ const Bento = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
               viewport={{ once: true, margin: "-50px" }}
-              className="w-full max-w-md h-auto max-h-80 relative z-10"
+              className="w-full max-w-md h-auto max-h-80 relative z-10 flex justify-center items-center"
             >
               <Lottie
                 animationData={keyAnimation}
@@ -159,7 +159,7 @@ const Bento = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
               viewport={{ once: true, margin: "-50px" }}
-              className="w-full max-w-md h-auto max-h-80 relative z-10"
+              className="w-full max-w-md h-auto max-h-80 relative z-10 flex justify-center items-center"
             >
               <Lottie
                 animationData={lockAnimation}
