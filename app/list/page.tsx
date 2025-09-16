@@ -1,101 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import Input from "../components/common/Input";
 import SectionHeader from "../components/common/SectionHeader";
 import Image from "next/image";
-
-interface Fraction {
-  id: string;
-  name: string;
-  creator: string;
-  recipients: number;
-  totalSplit: string;
-  status: "Active" | "Paused" | "Completed";
-  createdAt: string;
-}
-
-const mockFractions: Fraction[] = [
-  {
-    id: "1",
-    name: "Team Revenue Split",
-    creator: "5Fh...xY2",
-    recipients: 4,
-    totalSplit: "12,500 USDC",
-    status: "Active",
-    createdAt: "2024-01-15",
-  },
-  {
-    id: "2",
-    name: "Investment Pool",
-    creator: "8Kj...mN9",
-    recipients: 6,
-    totalSplit: "8,750 USDC",
-    status: "Active",
-    createdAt: "2024-01-12",
-  },
-  {
-    id: "3",
-    name: "Creator Royalties",
-    creator: "3Qw...pL4",
-    recipients: 3,
-    totalSplit: "5,200 USDC",
-    status: "Paused",
-    createdAt: "2024-01-10",
-  },
-  {
-    id: "4",
-    name: "DAO Treasury Split",
-    creator: "7Rt...vB8",
-    recipients: 8,
-    totalSplit: "25,000 USDC",
-    status: "Active",
-    createdAt: "2024-01-08",
-  },
-  {
-    id: "5",
-    name: "Marketing Fund",
-    creator: "2Gh3232...23sD6",
-    recipients: 2,
-    totalSplit: "3,400 USDC",
-    status: "Completed",
-    createdAt: "2024-01-05",
-  },
-  {
-    id: "6",
-    name: "Marketing Fund 2",
-    creator: "2Gh3232...223D6",
-    recipients: 2,
-    totalSplit: "3,400 USDC",
-    status: "Completed",
-    createdAt: "2024-01-05",
-  },
-  {
-    id: "7",
-    name: "Marketing Fund 3",
-    creator: "534dw...223D6",
-    recipients: 2,
-    totalSplit: "3,400 USDC",
-    status: "Completed",
-    createdAt: "2024-01-05",
-  },
-  {
-    id: "8",
-    name: "Marketing Fund 4",
-    creator: "23csdd...223D6",
-    recipients: 2,
-    totalSplit: "3,400 USDC",
-    status: "Completed",
-    createdAt: "2024-01-05",
-  },
-];
+import { fraction } from "../lib/fractionsdk";
+import { FractionConfig , programId} from "@sendaifun/fraction";
+import { useWallet } from "@jup-ag/wallet-adapter";
+import { PublicKey } from "@solana/web3.js";
 
 export default function ListPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
-
+  const { publicKey, connected } = useWallet();
+  const [fractions, setFractions] = useState<FractionConfig[]>([]);
   const copyToClipboard = async (address: string) => {
     try {
       await navigator.clipboard.writeText(address);
@@ -109,10 +29,27 @@ export default function ListPage() {
     }
   };
 
-  const filteredFractions = mockFractions.filter(
-    (fraction) =>
-      fraction.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      fraction.creator.toLowerCase().includes(searchQuery.toLowerCase())
+  const getFractionConfig = (fraction: FractionConfig) => {
+    const [fractionConfigPda] = PublicKey.findProgramAddressSync(
+      [Buffer.from("fraction_config"), fraction.authority.toBuffer(), Buffer.from(fraction.name)],
+      programId
+  );
+  return fractionConfigPda.toBase58();
+  }
+
+  useEffect(() => {
+    const fetchFractions = async () => {
+      const fractions = await fraction.getFractionsByAuthority(publicKey!);
+      setFractions(fractions);
+    };
+    if (connected) {
+      fetchFractions();
+    }
+  }, [connected]);
+
+  const filteredFractions = fractions.filter(
+    (fraction: FractionConfig) =>
+      fraction.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -149,9 +86,9 @@ export default function ListPage() {
                 />
               </div>
               <div className="flex flex-wrap gap-8 justify-center w-full">
-                {filteredFractions.map((fraction) => (
+                {filteredFractions.map((fraction: FractionConfig) => (
                   <div
-                    key={fraction.id}
+                    key={Math.random()}
                     className="flex-shrink-0 w-full max-w-[240px]  bg-[#0B78FD1A] border-t-[1.53px] border-l-[0.38px] border-r-[0.38px] border-b-[0.38px] border-[#0B78FD] rounded-xl p-6 hover:border-[#0B78FD]/[0.4] hover:bg-[#0B78FD25] transition-all duration-300 transform hover:-translate-y-1 "
                   >
                     {/* Header with name and status */}
@@ -173,20 +110,20 @@ export default function ListPage() {
                           Fraction Address
                         </div>
                         <div className="text-white font-polysans font-mono text-sm  px-0 py-1 rounded flex items-center gap-2 justify-between">
-                          {fraction.creator}
+                          {getFractionConfig(fraction).slice(0, 4) + "..." + getFractionConfig(fraction).slice(-4)}
 
                           <button
-                            onClick={() => copyToClipboard(fraction.creator)}
+                            onClick={() => copyToClipboard(getFractionConfig(fraction))}
                             className="hover:opacity-70 transition-opacity duration-200 cursor-pointer"
                           >
                             <Image
                               src={
-                                copiedAddress === fraction.creator
+                                copiedAddress === getFractionConfig(fraction)
                                   ? "/assets/icons/check.svg"
                                   : "/assets/icons/copy.svg"
                               }
                               alt={
-                                copiedAddress === fraction.creator
+                                copiedAddress === getFractionConfig(fraction)
                                   ? "Copied"
                                   : "Copy"
                               }
