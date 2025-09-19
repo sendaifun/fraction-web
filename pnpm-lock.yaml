@@ -18,8 +18,8 @@ importers:
         specifier: ^2.1.16
         version: 2.1.16(@types/react-dom@19.1.9(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@sendaifun/fraction':
-        specifier: ^0.0.5
-        version: 0.0.5(@coral-xyz/anchor@0.31.1(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.4(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2)(utf-8-validate@5.0.10)
+        specifier: ^0.0.6
+        version: 0.0.6(@coral-xyz/anchor@0.31.1(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.4(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2)(utf-8-validate@5.0.10)
       '@solana/wallet-adapter-base':
         specifier: ^0.9.27
         version: 0.9.27(@solana/web3.js@1.98.4(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10))
@@ -1318,8 +1318,8 @@ packages:
   '@scure/bip39@1.6.0':
     resolution: {integrity: sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A==}
 
-  '@sendaifun/fraction@0.0.5':
-    resolution: {integrity: sha512-NSxh1rMWTxEOL1DetMl803RgyXLcgHX3ucE7dJ35ID03PbGvvb7qzsIAW8y6NjULVwdKfMU3T8QDqgbzNAlxEg==}
+  '@sendaifun/fraction@0.0.6':
+    resolution: {integrity: sha512-kZoUXKl4NQUSS07oEM2XrnyKeU7Z/WFCq2FPuqICV6ZMhKi3V9XwKpUMIdVODSWTA9ndBxqOEG/+oFnVoJSSjw==}
     peerDependencies:
       '@coral-xyz/anchor': '>=0.30.0'
       '@solana/web3.js': '>=1.90.0'
@@ -7932,7 +7932,7 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
-  '@sendaifun/fraction@0.0.5(@coral-xyz/anchor@0.31.1(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.4(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2)(utf-8-validate@5.0.10)':
+  '@sendaifun/fraction@0.0.6(@coral-xyz/anchor@0.31.1(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.4(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2)(utf-8-validate@5.0.10)':
     dependencies:
       '@coral-xyz/anchor': 0.31.1(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10)
       '@solana/spl-token': 0.4.14(@solana/web3.js@1.98.4(bufferutil@4.0.9)(typescript@5.9.2)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.2)(utf-8-validate@5.0.10)

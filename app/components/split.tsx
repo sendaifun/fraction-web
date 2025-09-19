@@ -489,11 +489,6 @@ const Split = () => {
         })
         .filter(Boolean) as Array<{ wallet: string; shareBps: number }>;
 
-      console.log("participants", participants);
-      console.log("authority", publicKey?.toBase58());
-      console.log("fractionName", fractionName);
-      console.log("botWallet", botWallet.publicKey.toBase58());
-
       // Convert participants to have PublicKey objects and ensure exactly 5 participants
       const participantsWithPublicKeys = participants.map((p) => ({
         wallet: new PublicKey(p.wallet),
@@ -511,7 +506,7 @@ const Split = () => {
       const { tx, fractionConfigPda } = await fraction.createFraction({
         authority: publicKey!,
         participants: participantsWithPublicKeys,
-        botWallet: botWallet.publicKey, // no need to change to toBase58()
+        botWallet: botWallet, // no need to change to toBase58()
       });
 
       console.log("Transaction created:", tx);
@@ -543,12 +538,6 @@ const Split = () => {
           toast.success(
             "Fraction created successfully! Transaction confirmed."
           );
-          console.log("Split created with recipients:", recipients);
-          console.log("Split created with percentages:", percentages);
-          console.log("Transaction signature:", signature);
-          console.log("Bot wallet generated:", botWallet.publicKey.toString());
-          console.log("Fraction Config PDA:", fractionConfigPda);
-
           // clear the form data
           setRecipients(["", ""]);
           setPercentages(["", ""]);

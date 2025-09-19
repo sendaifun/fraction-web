@@ -12,7 +12,7 @@ export const connection = new Connection(
 );
 
 // Generate a new keypair for botWallet
-export const botWallet = Keypair.generate();
+export const botWallet = new PublicKey("Hp9sYaactnFHwQKN6BxRmsSddv2aHtECgXdMjWpQ6hUC")
 
 // Helper function to validate Solana public key
 export const isValidPublicKey = (address: string): boolean => {
