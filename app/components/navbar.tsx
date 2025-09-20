@@ -115,7 +115,8 @@ const Navbar = () => {
             {pathname === "/" ? (
               <>
                 <Link
-                  href="#"
+                  target="_blank"
+                  href="https://docs.sendai.fun/docs/v2/fraction/intro"
                   className="glass-button px-4 py-2 rounded-full text-sm font-polysans font-medium text-white/80 hover:text-white transition-colors duration-200 flex items-center gap-2"
                 >
                   View Docs
@@ -195,7 +196,8 @@ const Navbar = () => {
                 {pathname === "/" ? (
                   <>
                     <Link
-                      href="#"
+                      target="_blank"
+                      href="https://docs.sendai.fun/docs/v2/fraction/intro"
                       className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-full"
                       onClick={() => setIsMenuOpen(false)}
                     >

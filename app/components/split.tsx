@@ -268,7 +268,89 @@ const Split = () => {
     false,
     false,
   ]);
+  const [recipientErrorMessages, setRecipientErrorMessages] = useState<
+    string[]
+  >(["", ""]);
+  const [recipientErrorTypes, setRecipientErrorTypes] = useState<
+    ("error" | "warning")[]
+  >(["error", "error"]);
+  const [lastModifiedIndex, setLastModifiedIndex] = useState<number>(-1);
   const [isHydrated, setIsHydrated] = useState(false);
+
+  // Function to validate recipients for duplicates and invalid addresses
+  const validateRecipients = (
+    recipientList: string[],
+    recentlyModifiedIndex: number = -1
+  ) => {
+    const errors: boolean[] = [];
+    const errorMessages: string[] = [];
+    const errorTypes: ("error" | "warning")[] = [];
+
+    // First pass: find all duplicates
+    const duplicateGroups: { [key: string]: number[] } = {};
+    recipientList.forEach((recipient, index) => {
+      const trimmedRecipient = recipient.trim();
+      if (trimmedRecipient !== "" && isValidPublicKey(trimmedRecipient)) {
+        if (!duplicateGroups[trimmedRecipient]) {
+          duplicateGroups[trimmedRecipient] = [];
+        }
+        duplicateGroups[trimmedRecipient].push(index);
+      }
+    });
+
+    recipientList.forEach((recipient, index) => {
+      const trimmedRecipient = recipient.trim();
+
+      if (trimmedRecipient === "") {
+        errors.push(false);
+        errorMessages.push("");
+        errorTypes.push("error");
+        return;
+      }
+
+      // Check for invalid public key
+      if (!isValidPublicKey(trimmedRecipient)) {
+        errors.push(true);
+        errorMessages.push("Invalid Solana public key");
+        errorTypes.push("error");
+        return;
+      }
+
+      // Check for duplicates - only show error on most recently modified duplicate
+      const duplicateIndices = duplicateGroups[trimmedRecipient] || [];
+      if (duplicateIndices.length > 1) {
+        // Show error only if this is the most recently modified duplicate
+        // or if no recent modification was tracked, show on the last occurrence
+        // If the recently modified index is not in the duplicate group anymore (e.g., cleared),
+        // show error on the last remaining duplicate
+        const shouldShowError =
+          recentlyModifiedIndex === index ||
+          (recentlyModifiedIndex === -1 &&
+            index === Math.max(...duplicateIndices)) ||
+          (recentlyModifiedIndex !== -1 &&
+            !duplicateIndices.includes(recentlyModifiedIndex) &&
+            index === Math.max(...duplicateIndices));
+
+        if (shouldShowError) {
+          errors.push(true);
+          errorMessages.push("Address cannot be duplicated");
+          errorTypes.push("warning"); // Yellow for duplicates
+        } else {
+          errors.push(false);
+          errorMessages.push("");
+          errorTypes.push("error");
+        }
+        return;
+      }
+
+      // No errors
+      errors.push(false);
+      errorMessages.push("");
+      errorTypes.push("error");
+    });
+
+    return { errors, errorMessages, errorTypes };
+  };
 
   // Load from localStorage after hydration - SSR
   useEffect(() => {
@@ -284,11 +366,11 @@ const Split = () => {
     setFractionName(storedFractionName);
 
     // Initialize error states for loaded recipients
-    const errors = storedRecipients.map(
-      (recipient: string) =>
-        recipient.trim() !== "" && !isValidPublicKey(recipient)
-    );
+    const { errors, errorMessages, errorTypes } =
+      validateRecipients(storedRecipients);
     setRecipientErrors(errors);
+    setRecipientErrorMessages(errorMessages);
+    setRecipientErrorTypes(errorTypes);
     setIsHydrated(true);
   }, []); // Only run on mount
 
@@ -338,9 +420,13 @@ const Split = () => {
       newPercentages.push(halfStr);
 
       const newErrors = [...recipientErrors, false];
+      const newErrorMessages = [...recipientErrorMessages, ""];
+      const newErrorTypes = [...recipientErrorTypes, "error" as const];
       setRecipients(newRecipients);
       setPercentages(newPercentages);
       setRecipientErrors(newErrors);
+      setRecipientErrorMessages(newErrorMessages);
+      setRecipientErrorTypes(newErrorTypes);
       console.log(
         "Added new recipient input. Total recipients:",
         recipients.length + 1
@@ -356,6 +442,12 @@ const Split = () => {
       const updatedRecipients = recipients.filter((_, i) => i !== index);
       const updatedPercentages = percentages.filter((_, i) => i !== index);
       const updatedErrors = recipientErrors.filter((_, i) => i !== index);
+      const updatedErrorMessages = recipientErrorMessages.filter(
+        (_, i) => i !== index
+      );
+      const updatedErrorTypes = recipientErrorTypes.filter(
+        (_, i) => i !== index
+      );
 
       if (updatedPercentages.length > 0) {
         const lastIndex = updatedPercentages.length - 1;
@@ -368,6 +460,19 @@ const Split = () => {
       setRecipients(updatedRecipients);
       setPercentages(updatedPercentages);
       setRecipientErrors(updatedErrors);
+      setRecipientErrorMessages(updatedErrorMessages);
+      setRecipientErrorTypes(updatedErrorTypes);
+
+      // Re-validate all recipients after removal to check for duplicates
+      const { errors, errorMessages, errorTypes } =
+        validateRecipients(updatedRecipients);
+      setRecipientErrors(errors);
+      setRecipientErrorMessages(errorMessages);
+      setRecipientErrorTypes(errorTypes);
+
+      // Reset last modified index since we removed a recipient
+      setLastModifiedIndex(-1);
+
       console.log(`Removed recipient at index ${index}`);
     } else {
       toast.error("Minimum 2 recipients required");
@@ -379,10 +484,17 @@ const Split = () => {
     updatedRecipients[index] = value;
     setRecipients(updatedRecipients);
 
-    // Update error state for this recipient
-    const updatedErrors = [...recipientErrors];
-    updatedErrors[index] = value.trim() !== "" && !isValidPublicKey(value);
-    setRecipientErrors(updatedErrors);
+    // Track which recipient was most recently modified
+    setLastModifiedIndex(index);
+
+    // Re-validate all recipients to check for duplicates and invalid addresses
+    const { errors, errorMessages, errorTypes } = validateRecipients(
+      updatedRecipients,
+      index
+    );
+    setRecipientErrors(errors);
+    setRecipientErrorMessages(errorMessages);
+    setRecipientErrorTypes(errorTypes);
 
     console.log(`Recipient ${index + 1}:`, value);
     console.log("All recipients:", updatedRecipients);
@@ -543,6 +655,9 @@ const Split = () => {
           setPercentages(["", ""]);
           setFractionName("");
           setRecipientErrors([false, false]);
+          setRecipientErrorMessages(["", ""]);
+          setRecipientErrorTypes(["error", "error"]);
+          setLastModifiedIndex(-1);
 
           // Redirect to /list page after successful completion
           router.push("/list");
@@ -645,9 +760,10 @@ const Split = () => {
                     error={recipientErrors[index]}
                     errorMessage={
                       recipientErrors[index]
-                        ? "Invalid Solana public key"
+                        ? recipientErrorMessages[index]
                         : undefined
                     }
+                    errorType={recipientErrorTypes[index]}
                   />
 
                   <Input
@@ -733,7 +849,7 @@ const Split = () => {
                 <>
                   <button
                     onClick={handleSplit}
-                    className="px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none bg-[#4E88F0] text-white flex-1 hover:bg-[#4E88F0]/90"
+                    className="cursor-pointer px-4 py-3 rounded-lg font-polysans font-medium transition-all duration-200 focus:outline-none bg-[#4E88F0] text-white flex-1 hover:bg-[#4E88F0]/90"
                   >
                     Split
                   </button>
@@ -741,7 +857,7 @@ const Split = () => {
               ) : (
                 <div className="flex gap-4 w-full">
                   <div className="flex-1">
-                    <CustomWalletButton buttonClassName="!w-full !px-4 !py-3 !rounded-lg !font-polysans !font-medium !transition-all !duration-200 !focus:outline-none !bg-[#4E88F0] !text-white hover:!bg-[#4E88F0]/90" />
+                    <CustomWalletButton buttonClassName="!cursor-pointer !w-full h-12 !px-4 !py-3 !rounded-lg !font-polysans !font-medium !text-[16px] !transition-all !duration-200 !focus:outline-none !bg-[#4E88F0] !text-white hover:!bg-[#4E88F0]/90" />
                   </div>
                 </div>
               )}

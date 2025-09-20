@@ -14,6 +14,7 @@ interface InputProps {
   icon?: string;
   error?: boolean;
   errorMessage?: string;
+  errorType?: 'error' | 'warning'; // 'error' for red, 'warning' for yellow
 }
 
 const Input = ({
@@ -27,6 +28,7 @@ const Input = ({
   icon,
   error = false,
   errorMessage,
+  errorType = 'error',
 }: InputProps) => {
   const [internalValue, setInternalValue] = useState(value || "");
   const currentValue = value !== undefined ? value : internalValue;
@@ -70,7 +72,9 @@ const Input = ({
           onChange={(e) => handleChange(e.target.value)}
           className={`w-full py-3 pr-8 rounded-lg bg-[#0B78FD1A] border transition-all duration-200 text-white placeholder-gray-400 font-polysans focus:outline-none ${
             error
-              ? "border-red-500 focus:ring-2 focus:ring-red-500/20"
+              ? errorType === 'warning'
+                ? "border-yellow-500 focus:ring-2 focus:ring-yellow-500/20"
+                : "border-red-500 focus:ring-2 focus:ring-red-500/20"
               : "border-white/[0.04] focus:ring-2 focus:ring-[#0B78FD]/20"
           } ${
             icon ? "pl-10 px-4" : "px-4"
@@ -93,7 +97,9 @@ const Input = ({
         )}
       </div>
       {error && errorMessage && (
-        <p className="text-red-400 text-xs font-polysans mt-1">{errorMessage}</p>
+        <p className={`text-xs font-polysans mt-1 ${
+          errorType === 'warning' ? 'text-yellow-400' : 'text-red-400'
+        }`}>{errorMessage}</p>
       )}
     </div>
   );
